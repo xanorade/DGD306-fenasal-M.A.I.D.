@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public GameObject titleScreen;
+    public GameObject optionsScreen;
+    public GameObject creditsScreen;
+    public void GameStart() {
+        SceneManager.LoadScene("Game");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void OptionsButtonClicked() {
+        titleScreen.SetActive(false);
+        optionsScreen.SetActive(true);
+    }
+
+    public void CreditsButtonClicked() {
+        titleScreen.SetActive(false);
+        creditsScreen.SetActive(true);
+    }
+
+    public void QuitGame() {
+        Application.Quit();
     }
 }
