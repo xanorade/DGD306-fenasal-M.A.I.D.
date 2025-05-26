@@ -9,7 +9,8 @@ public class UIController : MonoBehaviour
     public GameObject optionsScreen;
     public GameObject creditsScreen;
     public void GameStart() {
-        SceneManager.LoadScene("Game");
+        //SceneManager.LoadScene("Game"); //TODO: Uncomment this when the game is ready
+        SceneManager.LoadScene("FightTest");
     }
 
     public void OptionsButtonClicked() {
