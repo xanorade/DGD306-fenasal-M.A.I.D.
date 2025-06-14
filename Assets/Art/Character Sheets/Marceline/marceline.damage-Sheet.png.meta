@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cde5d362a7a49417fbf2a45a31c9e3eb
+guid: ec32b5581a5994daf9f36ba2f180b52b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Alia_Idle_0
+      name: Marceline_Damage_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a39ea42b7a7a420391feb18d2c71a3d
-      internalID: -332517833
+      spriteID: 8548abc327ef441eeb74aaa6f35f6606
+      internalID: -5832545088655581527
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_1
+      name: Marceline_Damage_1
       rect:
         serializedVersion: 2
         x: 64
@@ -132,14 +132,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6c57b4431c844dc9a6b5f3c3766524f
-      internalID: -2036238382
+      spriteID: e4fe2023b40b54810815d068684f2b16
+      internalID: 1992134229842033030
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_2
+      name: Marceline_Damage_2
       rect:
         serializedVersion: 2
         x: 128
@@ -153,14 +153,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b48c08dbc6f4743a38690dbb527643bd
-      internalID: -1333917231
+      spriteID: e9e49fea16a1a4bf3b8588c7fbb486a3
+      internalID: 6510399872446534772
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_3
+      name: Marceline_Damage_3
       rect:
         serializedVersion: 2
         x: 192
@@ -174,8 +174,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 065be67479ded44f0818fd2f831885f2
-      internalID: -149692617
+      spriteID: 9be6bdceffc2d4f3e835b6c9e2285cff
+      internalID: 4546657129999140961
       vertices: []
       indices: 
       edges: []
@@ -191,10 +191,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_0: 4723107735738678597
-      Idle_1: -7385789195546760866
-      Idle_2: 3234629978573100161
-      Idle_3: 6373048116405451881
+      Marceline_Damage_0: -5832545088655581527
+      Marceline_Damage_1: 1992134229842033030
+      Marceline_Damage_2: 6510399872446534772
+      Marceline_Damage_3: 4546657129999140961
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

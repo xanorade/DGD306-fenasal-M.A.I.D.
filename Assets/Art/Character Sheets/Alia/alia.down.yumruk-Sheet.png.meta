@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cde5d362a7a49417fbf2a45a31c9e3eb
+guid: a1333a9d6c9994944a3439a88eb79172
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Alia_Idle_0
+      name: Alia_Crouch_Punch_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a39ea42b7a7a420391feb18d2c71a3d
-      internalID: -332517833
+      spriteID: aec744a28f5a947e1af4dd4b7ecc1f20
+      internalID: -1864824339139588009
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_1
+      name: Alia_Crouch_Punch_1
       rect:
         serializedVersion: 2
         x: 64
@@ -132,14 +132,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6c57b4431c844dc9a6b5f3c3766524f
-      internalID: -2036238382
+      spriteID: aec0ae03cd81f476c8351e1439b567e8
+      internalID: -8007923751193539731
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_2
+      name: Alia_Crouch_Punch_2
       rect:
         serializedVersion: 2
         x: 128
@@ -153,14 +153,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b48c08dbc6f4743a38690dbb527643bd
-      internalID: -1333917231
+      spriteID: 5ee41fe5614a0447c9010ca9c43f4e0c
+      internalID: -6057520037870437564
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_3
+      name: Alia_Crouch_Punch_3
       rect:
         serializedVersion: 2
         x: 192
@@ -174,8 +174,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 065be67479ded44f0818fd2f831885f2
-      internalID: -149692617
+      spriteID: 0965bbae3bff54d15b16d11af4875b06
+      internalID: 2061743096954419970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Alia_Crouch_Punch_4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 496daf1520a424134b55d1faefbc93f2
+      internalID: -3800212999407896130
       vertices: []
       indices: 
       edges: []
@@ -191,10 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_0: 4723107735738678597
-      Idle_1: -7385789195546760866
-      Idle_2: 3234629978573100161
-      Idle_3: 6373048116405451881
+      Alia_Crouch_Punch_0: -1864824339139588009
+      Alia_Crouch_Punch_1: -8007923751193539731
+      Alia_Crouch_Punch_2: -6057520037870437564
+      Alia_Crouch_Punch_3: 2061743096954419970
+      Alia_Crouch_Punch_4: -3800212999407896130
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cde5d362a7a49417fbf2a45a31c9e3eb
+guid: 2cb53872f0b554885aacef6dbd027367
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,12 +97,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Alia_Idle_0
+      name: Marceline_Attack_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -111,19 +111,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a39ea42b7a7a420391feb18d2c71a3d
-      internalID: -332517833
+      spriteID: dde2fa9908a7c4d87b1c0e710a33162c
+      internalID: 3932810548604427547
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_1
+      name: Marceline_Attack_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 80
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -132,19 +132,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6c57b4431c844dc9a6b5f3c3766524f
-      internalID: -2036238382
+      spriteID: 1932e54a673eb478f9bd7d9fd7b8937b
+      internalID: -8771143391935577136
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_2
+      name: Marceline_Attack_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 160
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -153,19 +153,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b48c08dbc6f4743a38690dbb527643bd
-      internalID: -1333917231
+      spriteID: de32168498ef346d696639a7636c6e59
+      internalID: -8638682629076351295
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_3
+      name: Marceline_Attack_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 240
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -174,8 +174,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 065be67479ded44f0818fd2f831885f2
-      internalID: -149692617
+      spriteID: 2b42a0216b3cd4456973374b411074dc
+      internalID: -796387444763880187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Marceline_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 80
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9763c22807343425c808bfbe2d65e679
+      internalID: 479704171
       vertices: []
       indices: 
       edges: []
@@ -191,10 +212,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_0: 4723107735738678597
-      Idle_1: -7385789195546760866
-      Idle_2: 3234629978573100161
-      Idle_3: 6373048116405451881
+      Marceline_Attack_0: 3932810548604427547
+      Marceline_Attack_1: -8771143391935577136
+      Marceline_Attack_2: -8638682629076351295
+      Marceline_Attack_3: -796387444763880187
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

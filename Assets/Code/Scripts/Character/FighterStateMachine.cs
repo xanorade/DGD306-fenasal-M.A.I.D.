@@ -377,28 +377,6 @@ public class JumpPunchState : FighterState
     }
 }
 
-public class UppercutState : FighterState
-{
-    public override void Enter(FighterController fighter, FighterStateMachine stateMachine)
-    {
-        base.Enter(fighter, stateMachine);
-    }
-    
-    public override void Execute(FighterController fighter, FighterStateMachine stateMachine)
-    {
-        base.Execute(fighter, stateMachine);
-        
-        // State is complete
-        if (IsAnimationFinished(STARTUP_FRAMES + ACTIVE_FRAMES + RECOVERY_FRAMES))
-            stateMachine.ChangeState(new IdleState());
-    }
-    
-    public override bool CanMove()
-    {
-        return false;
-    }
-}
-
 public class SpecialMoveState : FighterState
 {
     private const float SPECIAL_DURATION = 0.5f;

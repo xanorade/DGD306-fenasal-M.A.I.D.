@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cde5d362a7a49417fbf2a45a31c9e3eb
+guid: 1a498f084de994dffb6e157b7b5ac494
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,12 +97,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Alia_Idle_0
+      name: Marceline_Crouch_Attack_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -111,19 +111,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6a39ea42b7a7a420391feb18d2c71a3d
-      internalID: -332517833
+      spriteID: 7e0fe3b95a4e44b1ea9b6b73c5e27b1a
+      internalID: -3008157411527583223
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_1
+      name: Marceline_Crouch_Attack_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 80
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -132,19 +132,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6c57b4431c844dc9a6b5f3c3766524f
-      internalID: -2036238382
+      spriteID: e2536c65710b04ea9b9d24ead5ac9987
+      internalID: -534409095133005130
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_2
+      name: Marceline_Crouch_Attack_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 160
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -153,19 +153,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b48c08dbc6f4743a38690dbb527643bd
-      internalID: -1333917231
+      spriteID: fb460bfcf3fd44c2e8db376c359df682
+      internalID: 1123908921573355562
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Alia_Idle_3
+      name: Marceline_Crouch_Attack_3
       rect:
         serializedVersion: 2
-        x: 192
+        x: 240
         y: 0
-        width: 64
+        width: 80
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0}
@@ -174,8 +174,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 065be67479ded44f0818fd2f831885f2
-      internalID: -149692617
+      spriteID: f942d07018840436dbf7a53f86003b49
+      internalID: 822341946690310572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Marceline_Crouch_Attack_4
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 80
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93efb9ab2cc3643c99addf4a4fa6abc9
+      internalID: 8851735281313850724
       vertices: []
       indices: 
       edges: []
@@ -191,10 +212,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_0: 4723107735738678597
-      Idle_1: -7385789195546760866
-      Idle_2: 3234629978573100161
-      Idle_3: 6373048116405451881
+      Marceline_Crouch_Attack_0: -3008157411527583223
+      Marceline_Crouch_Attack_1: -534409095133005130
+      Marceline_Crouch_Attack_2: 1123908921573355562
+      Marceline_Crouch_Attack_3: 822341946690310572
+      Marceline_Crouch_Attack_4: 8851735281313850724
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -35,7 +35,7 @@ namespace DGD306.Character
     public class InputBuffer
     {
         private const int MAX_BUFFER_SIZE = 20;
-        private const float BUFFER_WINDOW = 0.5f; // Half-second buffer window
+        private const float BUFFER_WINDOW = 0.1f; // Half-second buffer window
         
         private Queue<InputCommand> commandBuffer = new Queue<InputCommand>();
         

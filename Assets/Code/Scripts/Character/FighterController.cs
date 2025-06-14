@@ -15,6 +15,8 @@ public class FighterController : MonoBehaviour
     
     [Header("Combat Settings")]
     [SerializeField] private float specialBarMax = 100f;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float currentHealth = 100f;
     
     [Header("Target Settings")]
     [SerializeField] private Transform opponentTransform;
@@ -50,6 +52,11 @@ public class FighterController : MonoBehaviour
     // Public property to access Rigidbody2D
     public Rigidbody2D rb { get; private set; }
     
+    // Public properties for health system
+    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth;
+    public bool IsAlive => currentHealth > 0f;
+    
     // State machine reference
     private FighterStateMachine stateMachine;
     
@@ -80,6 +87,12 @@ public class FighterController : MonoBehaviour
     
     // Components
     private Animator animator;
+    private HurtboxController hurtboxController;
+    
+    // Health and damage tracking
+    private string lastAttackTaken = "";
+    private float lastDamageTaken = 0f;
+    private Transform lastAttacker;
     
     // Input handling
     private bool useDirectInput = true;
@@ -99,6 +112,7 @@ public class FighterController : MonoBehaviour
     private void Awake(){
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        hurtboxController = GetComponent<HurtboxController>();
         
         stateMachine = new FighterStateMachine(this);
         inputBuffer = new InputBuffer();
@@ -113,6 +127,15 @@ public class FighterController : MonoBehaviour
         CreateDirectionArrow();
         
         UpdateStateText("Idle");
+        
+        // Initialize health
+        currentHealth = maxHealth;
+        
+        // Subscribe to hurtbox events
+        if (hurtboxController != null)
+        {
+            hurtboxController.OnHitTaken += OnHitTaken;
+        }
         
         // Check if this fighter has a PlayerInputHandler attached
         isControlledExternally = GetComponent<DGD306.Character.PlayerInputHandler>() != null;
@@ -344,7 +367,16 @@ public class FighterController : MonoBehaviour
         // Update the floating text display
         if (stateText != null)
         {
-            stateText.text = stateName;
+            // Include health information in the state text
+            string healthText = $" ({currentHealth:F0}/{maxHealth:F0})";
+            
+            // Add damage information if recently hit
+            if (!string.IsNullOrEmpty(lastAttackTaken) && Time.time - Time.fixedTime < 2f)
+            {
+                healthText += $"\nHit by {lastAttackTaken}: -{lastDamageTaken:F1}";
+            }
+            
+            stateText.text = stateName + healthText;
             
             // Optionally change color based on state type
             if (stateName.Contains("Punch") || stateName.Contains("Kick"))
@@ -353,6 +385,8 @@ public class FighterController : MonoBehaviour
                 stateText.color = Color.blue;
             else if (stateName.Contains("Jump"))
                 stateText.color = Color.green;
+            else if (!IsAlive)
+                stateText.color = Color.gray;
             else
                 stateText.color = stateTextColor;
         }
@@ -383,15 +417,7 @@ public class FighterController : MonoBehaviour
             directionArrow.enabled = show;
     }
     
-    private void OnDestroy()
-    {
-        // Cleanup - destroy the state text and direction arrow objects when fighter is destroyed
-        if (stateTextObj != null)
-            Destroy(stateTextObj);
-            
-        if (directionArrowObj != null)
-            Destroy(directionArrowObj);
-    }
+
     
     private void HandleDirectInput() {
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -502,10 +528,9 @@ public class FighterController : MonoBehaviour
             else if (Mathf.Abs(lastMoveInputX) > 0.5f) // Was moving, now neutral
                 inputBuffer.AddInput(new InputCommand(InputType.Neutral));
                 
-            if (moveInput.y < -0.5f)
-                inputBuffer.AddInput(new InputCommand(InputType.Down));
-            else if (moveInput.y > 0.5f)
-                inputBuffer.AddInput(new InputCommand(InputType.Up));
+            // Remove or comment this line to prevent up movement from interfering
+            // if (moveInput.y > 0.5f)
+            //     inputBuffer.AddInput(new InputCommand(InputType.Up));
         }
     }
     
@@ -542,8 +567,11 @@ public class FighterController : MonoBehaviour
         inputBuffer.AddInput(new InputCommand(InputType.Punch));
         
         if (!IsInAttackState()) {
-            // Stop horizontal movement for any attack
+            // Clear any movement velocity immediately for responsive attacks
             rb.velocity = new Vector2(0f, rb.velocity.y);
+            
+            // Force movement input to neutral to prevent interference
+            moveInput = Vector2.zero;
                 
             if (isCrouching)
                 stateMachine.ChangeState(new CrouchPunchState());
@@ -696,7 +724,6 @@ public class FighterController : MonoBehaviour
             currentStateType == typeof(CrouchKickState) ||
             currentStateType == typeof(JumpPunchState) ||
             currentStateType == typeof(JumpKickState) ||
-            currentStateType == typeof(UppercutState) ||
             currentStateType == typeof(SpecialMoveState) ||
             currentStateType == typeof(DashState);
     }
@@ -836,5 +863,102 @@ public class FighterController : MonoBehaviour
         {
             stateMachine.ChangeState(new JumpLoopState());
         }
+    }
+    
+    // Health and damage system methods
+    private void OnHitTaken(float damage, Transform attacker, string attackType)
+    {
+        if (!IsAlive) return; // Don't take damage if already dead
+        
+        // Store hit information for debug display
+        lastDamageTaken = damage;
+        lastAttackTaken = attackType;
+        lastAttacker = attacker;
+        
+        // Apply damage
+        currentHealth = Mathf.Max(0f, currentHealth - damage);
+        
+        // Debug log
+        string attackerName = attacker != null ? attacker.name : "Unknown";
+        Debug.Log($"{gameObject.name} took {damage:F1} damage from {attackerName}'s {attackType}. Health: {currentHealth:F1}/{maxHealth:F1}");
+        
+        // Update state text immediately to show new health
+        UpdateStateText(currentStateName);
+        
+        // Check if character died
+        if (!IsAlive)
+        {
+            OnDeath();
+        }
+        else
+        {
+            // Trigger hit state if not already in one and not blocking
+            if (stateMachine.CurrentStateType != typeof(HitState) && !isBlocking)
+            {
+                stateMachine.ChangeState(new HitState());
+            }
+        }
+    }
+    
+    private void OnDeath()
+    {
+        Debug.Log($"{gameObject.name} has been defeated!");
+        
+        // Stop all movement
+        rb.velocity = Vector2.zero;
+        
+        // You could transition to a death state here
+        // stateMachine.ChangeState(new DeathState());
+        
+        // Or disable input
+        enabled = false;
+        
+        // Update state text to show death
+        if (stateText != null)
+        {
+            stateText.text = "DEFEATED";
+            stateText.color = Color.red;
+        }
+    }
+    
+    // Public method to heal (useful for testing or special abilities)
+    public void Heal(float amount)
+    {
+        if (!IsAlive) return;
+        
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        UpdateStateText(currentStateName);
+        
+        Debug.Log($"{gameObject.name} healed for {amount:F1}. Health: {currentHealth:F1}/{maxHealth:F1}");
+    }
+    
+    // Public method to reset health (useful for round resets)
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        lastAttackTaken = "";
+        lastDamageTaken = 0f;
+        lastAttacker = null;
+        enabled = true; // Re-enable if was disabled due to death
+        
+        UpdateStateText(currentStateName);
+        
+        Debug.Log($"{gameObject.name} health reset to {maxHealth:F1}");
+    }
+    
+    private void OnDestroy()
+    {
+        // Unsubscribe from events
+        if (hurtboxController != null)
+        {
+            hurtboxController.OnHitTaken -= OnHitTaken;
+        }
+        
+        // Cleanup - destroy the state text and direction arrow objects when fighter is destroyed
+        if (stateTextObj != null)
+            Destroy(stateTextObj);
+            
+        if (directionArrowObj != null)
+            Destroy(directionArrowObj);
     }
 }

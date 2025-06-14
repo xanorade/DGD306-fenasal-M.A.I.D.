@@ -24,6 +24,8 @@ public class FighterAnimatorControllerCreator
         controller.AddParameter("Special", AnimatorControllerParameterType.Trigger);
         controller.AddParameter("Hit", AnimatorControllerParameterType.Trigger);
         controller.AddParameter("Dash", AnimatorControllerParameterType.Trigger);
+        controller.AddParameter("CrouchPunch", AnimatorControllerParameterType.Trigger);
+        controller.AddParameter("CrouchKick", AnimatorControllerParameterType.Trigger);
         
         // Add layers
         AnimatorControllerLayer baseLayer = controller.layers[0];
@@ -37,7 +39,7 @@ public class FighterAnimatorControllerCreator
         AnimatorState jumpLoopState = baseLayer.stateMachine.AddState("JumpLoop", new Vector3(200, 200, 0));
         AnimatorState crouchState = baseLayer.stateMachine.AddState("Crouch");
         AnimatorState blockState = baseLayer.stateMachine.AddState("Block");
-       //hey 
+       
         // Create attack states
         AnimatorState punchState = baseLayer.stateMachine.AddState("Punch");
         AnimatorState kickState = baseLayer.stateMachine.AddState("Kick");
@@ -51,6 +53,27 @@ public class FighterAnimatorControllerCreator
         
         // Set idle as default state
         baseLayer.stateMachine.defaultState = idleState;
+        
+        // Assign animation clips to states (if available)
+        AssignAnimationClip(idleState, "Assets/Art/Animations/Alia_Idle.anim");
+        AssignAnimationClip(blockState, "Assets/Art/Animations/Alia_Block.anim");
+        AssignAnimationClip(punchState, "Assets/Art/Animations/Alia_Punch.anim");
+        AssignAnimationClip(kickState, "Assets/Art/Animations/Alia_Kick.anim");
+        AssignAnimationClip(crouchPunchState, "Assets/Art/Animations/Alia_Crouch_Punch.anim");
+        AssignAnimationClip(hitState, "Assets/Art/Animations/Alia_Hit.anim");
+        AssignAnimationClip(jumpStartState, "Assets/Art/Animations/Alia_Jump_Start.anim");
+        AssignAnimationClip(jumpLoopState, "Assets/Art/Animations/Alia_Jump_Loop.anim");
+        
+        // Assign additional animations that exist
+        AssignAnimationClip(crouchState, "Assets/Art/Animations/Alia_CrouchBlock.anim"); // Using CrouchBlock for crouch state
+        
+        // These animations don't exist yet but the script will warn about them:
+        // - Alia_Walk.anim (for walkState)
+        // - Alia_Crouch_Kick.anim (for crouchKickState) 
+        // - Alia_Jump_Punch.anim (for jumpPunchState)
+        // - Alia_Jump_Kick.anim (for jumpKickState)
+        // - Alia_Special.anim (for specialState)
+        // - Alia_Dash.anim (for dashState)
         
         // Create transitions
         
@@ -136,8 +159,8 @@ public class FighterAnimatorControllerCreator
         
         // Crouch to other states
         CreateTransition(crouchState, idleState, "IsCrouching", AnimatorConditionMode.IfNot);
-        CreateTransition(crouchState, crouchPunchState, "Punch");
-        CreateTransition(crouchState, crouchKickState, "Kick");
+        CreateTransition(crouchState, crouchPunchState, "CrouchPunch");
+        CreateTransition(crouchState, crouchKickState, "CrouchKick");
         
         // Attack states back to idle when done
         SetStateToReturnToIdle(punchState);
@@ -153,7 +176,42 @@ public class FighterAnimatorControllerCreator
         // Return from block
         CreateTransition(blockState, idleState, "IsBlocking", AnimatorConditionMode.IfNot);
         
+        // Any State to attack transitions for instant response
+        var anyStateToPunch = baseLayer.stateMachine.AddAnyStateTransition(punchState);
+        anyStateToPunch.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Punch");
+        anyStateToPunch.duration = 0f; // Instant transition
+        anyStateToPunch.canTransitionToSelf = false;
+
+        var anyStateToKick = baseLayer.stateMachine.AddAnyStateTransition(kickState);
+        anyStateToKick.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Kick");
+        anyStateToKick.duration = 0f; // Instant transition
+        anyStateToKick.canTransitionToSelf = false;
+
+        var anyStateToSpecial = baseLayer.stateMachine.AddAnyStateTransition(specialState);
+        anyStateToSpecial.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Special");
+        anyStateToSpecial.duration = 0f; // Instant transition
+        anyStateToSpecial.canTransitionToSelf = false;
+        
+        // Save the asset
+        EditorUtility.SetDirty(controller);
+        AssetDatabase.SaveAssets();
+        
         Debug.Log("Fighter Animator Controller created at: Assets/Art/Animations/FighterAnimatorController.controller");
+        Debug.Log("Animation clips assigned where available. CrouchPunch state now has Alia_Crouch_Punch.anim assigned!");
+    }
+    
+    private static void AssignAnimationClip(AnimatorState state, string clipPath)
+    {
+        AnimationClip clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
+        if (clip != null)
+        {
+            state.motion = clip;
+            Debug.Log($"Assigned {clip.name} to {state.name} state");
+        }
+        else
+        {
+            Debug.LogWarning($"Animation clip not found at: {clipPath}");
+        }
     }
     
     private static AnimatorStateTransition CreateTransition(
