@@ -2,16 +2,23 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 using DGD306.Character;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class RoundManager : MonoBehaviour
 {
-    [Header("Raunt Ayarları")]
-    public int totalRounds = 3;
+    [Header("Round Settings")]
+    public int totalRoundsToWin = 2;
     public float timeBetweenRounds = 5f;
 
-    [Header("Referanslar")]
+    [Header("References")]
     public RoundTimer roundTimer;
     public TMP_Text roundAnnouncerText;
+    
+    [Header("Game Over UI")]
+    public GameObject gameOverPanel;
+    public TMP_Text winnerText;
+    public GameObject rematchButton;
 
     private int currentRound = 0;
     private int p1Wins = 0;
@@ -31,111 +38,146 @@ public class RoundManager : MonoBehaviour
         p1StartPos = p1Spawn;
         p2StartPos = p2Spawn;
 
-        StartCoroutine(GameFlowCoroutine());
+        gameOverPanel.SetActive(false);
+        StartCoroutine(StartRoundCoroutine());
     }
 
-    private IEnumerator GameFlowCoroutine()
-    {
-        while (currentRound < totalRounds)
-        {
-            yield return StartCoroutine(RoundStartCoroutine());
-            yield return StartCoroutine(RoundPlayCoroutine());
-            yield return StartCoroutine(RoundEndCoroutine());
-        }
-        Debug.Log("GAME OVER!");
-    }
-
-    private IEnumerator RoundStartCoroutine()
+    private IEnumerator StartRoundCoroutine()
     {
         currentRound++;
         isRoundOver = false;
-        
+
         player1.ResetHealth();
         player2.ResetHealth();
         player1.transform.position = p1StartPos.position;
         player2.transform.position = p2StartPos.position;
-        player1.FlipCharacter(true); 
+        player1.FlipCharacter(true);
 
         roundAnnouncerText.gameObject.SetActive(true);
-        if (currentRound == totalRounds)
+        if (currentRound == totalRoundsToWin)
         {
             roundAnnouncerText.text = "Final Round";
-            AudioManager.instance.PlaySFX("AnnouncerFinalRound");
+            if (AudioManager.instance != null) AudioManager.instance.PlaySFX("AnnouncerFinalRound");
         }
         else
         {
             roundAnnouncerText.text = "Round " + currentRound;
-            if(currentRound == 1) AudioManager.instance.PlaySFX("AnnouncerRoundOne");
-            else if (currentRound == 2) AudioManager.instance.PlaySFX("AnnouncerRoundTwo");
+            if (AudioManager.instance != null)
+            {
+                if (currentRound == 1) AudioManager.instance.PlaySFX("AnnouncerRoundOne");
+                else if (currentRound == 2) AudioManager.instance.PlaySFX("AnnouncerRoundTwo");
+            }
         }
         
         yield return new WaitForSeconds(2f);
         roundAnnouncerText.gameObject.SetActive(false);
 
-        if (currentRound == totalRounds)
+        if (AudioManager.instance != null)
         {
-            AudioManager.instance.PlayMusic("FinalRoundMusic");
-        }
-        else
-        {
-            AudioManager.instance.PlayMusic("NormalRoundMusic");
+            if (currentRound == totalRoundsToWin)
+            {
+                AudioManager.instance.PlayMusic("FinalRoundMusic");
+            }
+            else
+            {
+                AudioManager.instance.PlayMusic("NormalRoundMusic");
+            }
         }
 
         roundTimer.StartCountdown();
+        StartCoroutine(PlayRoundCoroutine());
     }
 
-    private IEnumerator RoundPlayCoroutine()
+    private IEnumerator PlayRoundCoroutine()
     {
-        while (roundTimer.IsTimerRunning() && !isRoundOver)
+        while (!isRoundOver)
         {
+            if (!roundTimer.IsTimerRunning())
+            {
+                HandleTimeUp();
+                break;
+            }
             yield return null;
         }
+    }
 
-        if (isRoundOver) yield break;
+    private IEnumerator EndRoundSequence()
+    {
+        yield return new WaitForSeconds(timeBetweenRounds);
 
+        if (p1Wins >= totalRoundsToWin || p2Wins >= totalRoundsToWin)
+        {
+            HandleMatchOver(p1Wins > p2Wins ? 1 : 2);
+        }
+        else
+        {
+            StartCoroutine(StartRoundCoroutine());
+        }
+    }
+
+    private void HandleTimeUp()
+    {
+        if (isRoundOver) return;
         isRoundOver = true;
         roundTimer.StopTimer();
-        AudioManager.instance.StopMusic();
-        Debug.Log("Time is over. Checking for healths...");
+        if (AudioManager.instance != null) AudioManager.instance.StopMusic();
+
+        Debug.Log("Time is up, checking health...");
 
         if (player1.CurrentHealth > player2.CurrentHealth)
         {
-            player1.TriggerWin();
             p1Wins++;
+            player1.TriggerWin();
         }
         else if (player2.CurrentHealth > player1.CurrentHealth)
         {
-            player2.TriggerWin();
             p2Wins++;
+            player2.TriggerWin();
         }
         else
         {
             Debug.Log("DRAW!");
         }
-    }
-
-    private IEnumerator RoundEndCoroutine()
-    {
-        yield return new WaitForSeconds(timeBetweenRounds);
+        StartCoroutine(EndRoundSequence());
     }
 
     public void OnFighterDefeated(FighterController defeatedFighter)
     {
         if (isRoundOver) return;
-
         isRoundOver = true;
         roundTimer.StopTimer();
-        AudioManager.instance.StopMusic();
+        if (AudioManager.instance != null) AudioManager.instance.StopMusic();
 
         if (defeatedFighter == player1)
         {
-            player2.TriggerWin();
             p2Wins++;
+            player2.TriggerWin();
         }
         else
         {
-            player1.TriggerWin();
             p1Wins++;
+            player1.TriggerWin();
         }
+        StartCoroutine(EndRoundSequence());
+    }
+
+    void HandleMatchOver(int winnerPlayerIndex)
+    {
+        Debug.Log("MATCH OVER!");
+        winnerText.text = "PLAYER " + winnerPlayerIndex + " WINS";
+        gameOverPanel.SetActive(true);
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(rematchButton);
+    }
+    
+    public void Rematch()
+    {
+        SceneManager.LoadScene("CharacterSelect_Scene");
+    }
+
+    public void QuitToTitle()
+    {
+        SceneManager.LoadScene("TitleScreen");
     }
 }
