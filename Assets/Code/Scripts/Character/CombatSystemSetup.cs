@@ -190,5 +190,67 @@ namespace DGD306.Character
                 Debug.Log($"Current Hurtbox State: {hurtbox.GetCurrentHurtboxStateName()}");
             }
         }
+        
+        [ContextMenu("Trigger Win")]
+        public void TriggerWin()
+        {
+            FighterController fighter = GetComponent<FighterController>();
+            if (fighter != null)
+            {
+                fighter.TriggerWinForTesting();
+                Debug.Log($"Triggered win for {gameObject.name}");
+            }
+        }
+        
+        [ContextMenu("Trigger Death")]
+        public void TriggerDeath()
+        {
+            FighterController fighter = GetComponent<FighterController>();
+            if (fighter != null)
+            {
+                // Set health to 0 and trigger death naturally
+                HurtboxController hurtbox = GetComponent<HurtboxController>();
+                if (hurtbox != null)
+                {
+                    hurtbox.TakeHit(fighter.CurrentHealth + 10f, transform, "Test Death");
+                    Debug.Log($"Triggered death for {gameObject.name}");
+                }
+            }
+        }
+        
+        [ContextMenu("Test Win Condition - Kill Opponent")]
+        public void TestWinCondition()
+        {
+            FighterController fighter = GetComponent<FighterController>();
+            if (fighter == null) return;
+            
+            // Find opponent
+            FighterController[] allFighters = FindObjectsOfType<FighterController>();
+            FighterController opponent = null;
+            
+            foreach (var otherFighter in allFighters)
+            {
+                if (otherFighter.gameObject != this.gameObject)
+                {
+                    opponent = otherFighter;
+                    break;
+                }
+            }
+            
+            if (opponent != null)
+            {
+                // Deal massive damage to opponent to trigger win condition
+                HurtboxController opponentHurtbox = opponent.GetComponent<HurtboxController>();
+                if (opponentHurtbox != null)
+                {
+                    opponentHurtbox.TakeHit(opponent.CurrentHealth + 10f, transform, "Test Win Condition");
+                    Debug.Log($"Dealt lethal damage to {opponent.name} to test win condition for {gameObject.name}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No opponent found to test win condition!");
+            }
+        }
     }
 } 

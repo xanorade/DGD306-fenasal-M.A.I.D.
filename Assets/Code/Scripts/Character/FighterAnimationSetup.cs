@@ -29,6 +29,8 @@ namespace DGD306.Character
         [SerializeField] private AnimationClip crouchKickAnimation;
         [SerializeField] private AnimationClip jumpPunchAnimation;
         [SerializeField] private AnimationClip jumpKickAnimation;
+        [SerializeField] private AnimationClip winAnimation;
+        [SerializeField] private AnimationClip deathAnimation;
         
         private Animator animator;
         
@@ -156,6 +158,12 @@ namespace DGD306.Character
                     break;
                 case "JumpKick":
                     if (jumpKickAnimation != null) state.motion = jumpKickAnimation;
+                    break;
+                case "Win":
+                    if (winAnimation != null) state.motion = winAnimation;
+                    break;
+                case "Death":
+                    if (deathAnimation != null) state.motion = deathAnimation;
                     break;
             }
         }

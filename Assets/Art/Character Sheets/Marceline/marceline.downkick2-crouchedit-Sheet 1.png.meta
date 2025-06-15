@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1a498f084de994dffb6e157b7b5ac494
+guid: 01ad6def3631c4d8a98403495397d093
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Marceline_Crouch_Attack_0
+      name: Marceline_Crouch_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e0fe3b95a4e44b1ea9b6b73c5e27b1a
-      internalID: -3008157411527583223
+      spriteID: 67c9aeaa41dbf4db38bf4fcfbd7c717a
+      internalID: -1594645578
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marceline_Crouch_Attack_1
+      name: Marceline_Crouch_1
       rect:
         serializedVersion: 2
         x: 80
@@ -132,14 +132,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e2536c65710b04ea9b9d24ead5ac9987
-      internalID: -534409095133005130
+      spriteID: cd0eeb424d7ff4ce98afd3356b673129
+      internalID: -508965653
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marceline_Crouch_Attack_2
+      name: Marceline_Crouch_2
       rect:
         serializedVersion: 2
         x: 160
@@ -153,14 +153,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb460bfcf3fd44c2e8db376c359df682
-      internalID: 1123908921573355562
+      spriteID: 2f8fa920b90d149c58c747de4441a816
+      internalID: -321597700
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Marceline_Crouch_Attack_3
+      name: Marceline_Crouch_3
       rect:
         serializedVersion: 2
         x: 240
@@ -174,29 +174,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f942d07018840436dbf7a53f86003b49
-      internalID: 822341946690310572
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Marceline_Crouch_Attack_4
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 80
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 93efb9ab2cc3643c99addf4a4fa6abc9
-      internalID: 8851735281313850724
+      spriteID: f791ee3b57b6545cc8b4894653a903a2
+      internalID: 412490351
       vertices: []
       indices: 
       edges: []
@@ -212,11 +191,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Marceline_Crouch_Attack_0: -3008157411527583223
-      Marceline_Crouch_Attack_1: -534409095133005130
-      Marceline_Crouch_Attack_2: 1123908921573355562
-      Marceline_Crouch_Attack_3: 822341946690310572
-      Marceline_Crouch_Attack_4: 8851735281313850724
+      Marceline_Crouch_Kick_0: 1480458984478057674
+      Marceline_Crouch_Kick_1: -6350128831339670617
+      Marceline_Crouch_Kick_2: 4003156515613377474
+      Marceline_Crouch_Kick_3: -1814332363780222870
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

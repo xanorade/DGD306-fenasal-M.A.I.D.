@@ -423,4 +423,60 @@ public class HitState : FighterState
     {
         return false;
     }
+}
+
+public class WinState : FighterState
+{
+    public override void Enter(FighterController fighter, FighterStateMachine stateMachine)
+    {
+        base.Enter(fighter, stateMachine);
+        
+        // Stop all movement when entering win state
+        Rigidbody2D rb = fighter.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+    
+    public override void Execute(FighterController fighter, FighterStateMachine stateMachine)
+    {
+        base.Execute(fighter, stateMachine);
+        
+        // Win state never exits automatically - it's the final victory state
+        // The animation will loop or hold on the last frame
+    }
+    
+    public override bool CanMove()
+    {
+        return false; // No movement allowed in win state
+    }
+}
+
+public class DeathState : FighterState
+{
+    public override void Enter(FighterController fighter, FighterStateMachine stateMachine)
+    {
+        base.Enter(fighter, stateMachine);
+        
+        // Stop all movement when entering death state
+        Rigidbody2D rb = fighter.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
+    }
+    
+    public override void Execute(FighterController fighter, FighterStateMachine stateMachine)
+    {
+        base.Execute(fighter, stateMachine);
+        
+        // Death state never exits automatically - it's the final defeated state
+        // The death animation will play once and hold on the last frame
+    }
+    
+    public override bool CanMove()
+    {
+        return false; // No movement allowed in death state
+    }
 } 

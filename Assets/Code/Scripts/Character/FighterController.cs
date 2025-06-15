@@ -56,6 +56,10 @@ public class FighterController : MonoBehaviour
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
     public bool IsAlive => currentHealth > 0f;
+    public bool HasWon => stateMachine?.CurrentStateType == typeof(WinState);
+    public bool IsDead => stateMachine?.CurrentStateType == typeof(DeathState);
+    
+
     
     // State machine reference
     private FighterStateMachine stateMachine;
@@ -809,6 +813,18 @@ public class FighterController : MonoBehaviour
             // This prevents the animator from immediately transitioning back to idle
             animator.SetBool("IsGrounded", false);
         }
+        else if (stateType == typeof(HitState))
+        {
+            animator.SetTrigger("Hit");
+        }
+        else if (stateType == typeof(WinState))
+        {
+            animator.SetTrigger("Win");
+        }
+        else if (stateType == typeof(DeathState))
+        {
+            animator.SetTrigger("Death");
+        }
        
     }
     
@@ -907,11 +923,8 @@ public class FighterController : MonoBehaviour
         // Stop all movement
         rb.velocity = Vector2.zero;
         
-        // You could transition to a death state here
-        // stateMachine.ChangeState(new DeathState());
-        
-        // Or disable input
-        enabled = false;
+        // Transition to death state instead of just disabling
+        stateMachine.ChangeState(new DeathState());
         
         // Update state text to show death
         if (stateText != null)
@@ -919,6 +932,41 @@ public class FighterController : MonoBehaviour
             stateText.text = "DEFEATED";
             stateText.color = Color.red;
         }
+        
+        // Check if opponent should win
+        CheckOpponentWinCondition();
+    }
+    
+    private void CheckOpponentWinCondition()
+    {
+        if (opponentTransform != null)
+        {
+            FighterController opponent = opponentTransform.GetComponent<FighterController>();
+            if (opponent != null && opponent.IsAlive)
+            {
+                opponent.TriggerWin();
+            }
+        }
+    }
+    
+    public void TriggerWin()
+    {
+        if (stateMachine.CurrentStateType == typeof(WinState)) return; // Already in win state
+        
+        Debug.Log($"{gameObject.name} has won the match!");
+        
+        // Trigger win state
+        stateMachine.ChangeState(new WinState());
+        
+        // Update state text to show victory
+        if (stateText != null)
+        {
+            stateText.text = "VICTORY!";
+            stateText.color = Color.yellow;
+        }
+        
+        // Disable input for the winner (they're celebrating)
+        enabled = false;
     }
     
     // Public method to heal (useful for testing or special abilities)
@@ -941,9 +989,28 @@ public class FighterController : MonoBehaviour
         lastAttacker = null;
         enabled = true; // Re-enable if was disabled due to death
         
+        // Reset from win state if necessary
+        if (stateMachine.CurrentStateType == typeof(WinState))
+        {
+            stateMachine.ChangeState(new IdleState());
+        }
+        
+        // Reset from death state if necessary
+        if (stateMachine.CurrentStateType == typeof(DeathState))
+        {
+            stateMachine.ChangeState(new IdleState());
+        }
+        
         UpdateStateText(currentStateName);
         
         Debug.Log($"{gameObject.name} health reset to {maxHealth:F1}");
+    }
+    
+    // Manual win trigger for testing
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public void TriggerWinForTesting()
+    {
+        TriggerWin();
     }
     
     private void OnDestroy()

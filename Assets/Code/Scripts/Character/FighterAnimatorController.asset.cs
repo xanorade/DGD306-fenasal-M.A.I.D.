@@ -26,6 +26,10 @@ public class FighterAnimatorControllerCreator
         controller.AddParameter("Dash", AnimatorControllerParameterType.Trigger);
         controller.AddParameter("CrouchPunch", AnimatorControllerParameterType.Trigger);
         controller.AddParameter("CrouchKick", AnimatorControllerParameterType.Trigger);
+        controller.AddParameter("Win", AnimatorControllerParameterType.Trigger);
+        controller.AddParameter("Death", AnimatorControllerParameterType.Trigger);
+        
+        Debug.Log("✅ Created animator parameters including new Win and Death triggers");
         
         // Add layers
         AnimatorControllerLayer baseLayer = controller.layers[0];
@@ -50,6 +54,10 @@ public class FighterAnimatorControllerCreator
         AnimatorState specialState = baseLayer.stateMachine.AddState("Special");
         AnimatorState hitState = baseLayer.stateMachine.AddState("Hit");
         AnimatorState dashState = baseLayer.stateMachine.AddState("Dash");
+        AnimatorState winState = baseLayer.stateMachine.AddState("Win", new Vector3(400, 200, 0));
+        AnimatorState deathState = baseLayer.stateMachine.AddState("Death", new Vector3(200, 400, 0));
+        
+        Debug.Log("✅ Created all animator states including new Win and Death states");
         
         // Set idle as default state
         baseLayer.stateMachine.defaultState = idleState;
@@ -66,6 +74,12 @@ public class FighterAnimatorControllerCreator
         
         // Assign additional animations that exist
         AssignAnimationClip(crouchState, "Assets/Art/Animations/Alia_CrouchBlock.anim"); // Using CrouchBlock for crouch state
+        
+        // Try to assign win animation if it exists
+        AssignAnimationClip(winState, "Assets/Art/Animations/Alia_Win.anim");
+        
+        // Try to assign death animation if it exists
+        AssignAnimationClip(deathState, "Assets/Art/Animations/Alia_Death.anim");
         
         // These animations don't exist yet but the script will warn about them:
         // - Alia_Walk.anim (for walkState)
@@ -191,6 +205,48 @@ public class FighterAnimatorControllerCreator
         anyStateToSpecial.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Special");
         anyStateToSpecial.duration = 0f; // Instant transition
         anyStateToSpecial.canTransitionToSelf = false;
+
+        // CRITICAL: Add Hit state transitions for damage reactions
+        // Any State to Hit transition for immediate hit reactions
+        var anyStateToHit = baseLayer.stateMachine.AddAnyStateTransition(hitState);
+        anyStateToHit.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Hit");
+        anyStateToHit.duration = 0f; // Instant transition for immediate hit reaction
+        anyStateToHit.canTransitionToSelf = false;
+        
+        // Also add individual Hit transitions from key states for better control
+        CreateTransition(idleState, hitState, "Hit");
+        CreateTransition(walkState, hitState, "Hit");  
+        CreateTransition(crouchState, hitState, "Hit");
+        CreateTransition(blockState, hitState, "Hit");
+        CreateTransition(punchState, hitState, "Hit");
+        CreateTransition(kickState, hitState, "Hit");
+        CreateTransition(crouchPunchState, hitState, "Hit");
+        CreateTransition(crouchKickState, hitState, "Hit");
+        CreateTransition(jumpLoopState, hitState, "Hit");
+        CreateTransition(jumpPunchState, hitState, "Hit");
+        CreateTransition(jumpKickState, hitState, "Hit");
+        CreateTransition(specialState, hitState, "Hit");
+        CreateTransition(dashState, hitState, "Hit");
+        
+        // CRITICAL: Add Win state transitions - Any state can transition to Win instantly
+        var anyStateToWin = baseLayer.stateMachine.AddAnyStateTransition(winState);
+        anyStateToWin.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Win");
+        anyStateToWin.duration = 0f; // Instant transition for immediate win reaction
+        anyStateToWin.canTransitionToSelf = false;
+        
+        // Win state should not transition back to anything - it's the final state
+        // The win animation will loop or hold on the last frame
+        
+        // CRITICAL: Add Death state transitions - Any state can transition to Death instantly
+        var anyStateToDeath = baseLayer.stateMachine.AddAnyStateTransition(deathState);
+        anyStateToDeath.AddCondition(UnityEditor.Animations.AnimatorConditionMode.If, 0, "Death");
+        anyStateToDeath.duration = 0f; // Instant transition for immediate death reaction
+        anyStateToDeath.canTransitionToSelf = false;
+        
+        // Death state should not transition back to anything - it's the final state
+        // The death animation will play once and hold on the last frame
+        
+        Debug.Log("✅ Win and Death state transitions configured - Any state can instantly transition to Win or Death");
         
         // Save the asset
         EditorUtility.SetDirty(controller);
@@ -198,6 +254,11 @@ public class FighterAnimatorControllerCreator
         
         Debug.Log("Fighter Animator Controller created at: Assets/Art/Animations/FighterAnimatorController.controller");
         Debug.Log("Animation clips assigned where available. CrouchPunch state now has Alia_Crouch_Punch.anim assigned!");
+        Debug.Log("✅ CRITICAL: Hit state transitions added! Hit animations will now play when damage is taken.");
+        Debug.Log("✅ NEW: Win state added with instant Any State transitions! Win animation will play when victory is achieved.");
+        Debug.Log("📝 Use FighterAnimationSetup component to assign the win animation and apply it to the controller.");
+        Debug.Log("✅ NEW: Death state added with instant Any State transitions! Death animation will play when defeated.");
+        Debug.Log("📝 Use FighterAnimationSetup component to assign the death animation and apply it to the controller.");
     }
     
     private static void AssignAnimationClip(AnimatorState state, string clipPath)
