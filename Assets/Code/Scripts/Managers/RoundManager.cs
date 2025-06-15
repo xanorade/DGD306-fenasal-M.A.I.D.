@@ -19,6 +19,10 @@ public class RoundManager : MonoBehaviour
     public GameObject gameOverPanel;
     public TMP_Text winnerText;
     public GameObject rematchButton;
+    
+    [Header("Win Display UI")]
+    public RoundWinDisplay player1WinDisplay;
+    public RoundWinDisplay player2WinDisplay;
 
     private int currentRound = 0;
     private int p1Wins = 0;
@@ -39,6 +43,10 @@ public class RoundManager : MonoBehaviour
         p2StartPos = p2Spawn;
 
         gameOverPanel.SetActive(false);
+        
+        player1WinDisplay.ResetIcons();
+        player2WinDisplay.ResetIcons();
+        
         StartCoroutine(StartRoundCoroutine());
     }
 
@@ -127,16 +135,20 @@ public class RoundManager : MonoBehaviour
         if (player1.CurrentHealth > player2.CurrentHealth)
         {
             p1Wins++;
+            player1WinDisplay.UpdateWinIcons(p1Wins);
             player1.TriggerWin();
         }
         else if (player2.CurrentHealth > player1.CurrentHealth)
         {
             p2Wins++;
+            player2WinDisplay.UpdateWinIcons(p2Wins); 
             player2.TriggerWin();
         }
         else
         {
-            Debug.Log("DRAW!");
+            p1Wins++;
+            player1WinDisplay.UpdateWinIcons(p1Wins);
+            player1.TriggerWin();
         }
         StartCoroutine(EndRoundSequence());
     }
@@ -151,12 +163,14 @@ public class RoundManager : MonoBehaviour
         if (defeatedFighter == player1)
         {
             p2Wins++;
+            player2WinDisplay.UpdateWinIcons(p2Wins); // YENİ
             player2.TriggerWin();
         }
         else
         {
             p1Wins++;
-            player1.TriggerWin();
+            player1WinDisplay.UpdateWinIcons(p1Wins); // YENİ
+            player1.TriggerWin();   
         }
         StartCoroutine(EndRoundSequence());
     }
@@ -173,11 +187,11 @@ public class RoundManager : MonoBehaviour
     
     public void Rematch()
     {
-        SceneManager.LoadScene("CharacterSelect_Scene");
+        SceneManager.LoadScene("CharacterSelectScene");
     }
 
     public void QuitToTitle()
     {
-        SceneManager.LoadScene("TitleScreen");
+        SceneManager.LoadScene("TitleScene");
     }
 }

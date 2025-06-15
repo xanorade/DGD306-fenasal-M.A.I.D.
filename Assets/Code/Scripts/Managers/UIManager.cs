@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
 
     public void SelectTwoPlayerMode()
     {
-        SceneManager.LoadScene("CharacterSelect_Scene"); 
+        SceneManager.LoadScene("CharacterSelectScene"); 
     }
 
     public void OptionsButtonClicked()

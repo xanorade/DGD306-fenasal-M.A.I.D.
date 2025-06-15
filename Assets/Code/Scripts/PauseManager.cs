@@ -54,6 +54,6 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
         IsGamePaused = false;
         
-        SceneManager.LoadScene("TitleScreen"); 
+        SceneManager.LoadScene("TitleScene"); 
     }
 }
