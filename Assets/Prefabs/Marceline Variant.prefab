@@ -1,0 +1,291 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4572603606383520734
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819847356941294308, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4109936983237843579, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4109936983237843579, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: hitAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: a17435217bb6f4232af4a21d75b4ea34, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: dashAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 23918cdcfec5e476dafd967e50bd1d24, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: kickAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: d3fd5fa3acb354e2f84fa5e8ef8f1173, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: walkAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 23918cdcfec5e476dafd967e50bd1d24, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: deathAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 3313ed8c60c40401dada5d0dd72e733d, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: punchAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 29f59a8eed22140c3b0bcf3cd5ff81c9, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: crouchAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 3919373ccdf3d474d85a47dec778a3aa, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: jumpKickAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: d3fd5fa3acb354e2f84fa5e8ef8f1173, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: animatorController
+      value: 
+      objectReference: {fileID: 9100000, guid: 14c1296bfcb8247fba19e86f86fcb42c, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: jumpPunchAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 29f59a8eed22140c3b0bcf3cd5ff81c9, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: crouchKickAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 7e1178fb79fa24715af591bf8744ee75, type: 2}
+    - target: {fileID: 4177930608971846529, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: crouchPunchAnimation
+      value: 
+      objectReference: {fileID: 7400000, guid: 6ab7ff388957f4e51b490575ff11b71e, type: 2}
+    - target: {fileID: 5941970510511101544, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 14c1296bfcb8247fba19e86f86fcb42c, type: 2}
+    - target: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_Name
+      value: Marceline Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5436168726979313706}
+    - targetCorrespondingSourceObject: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4428722887087061377}
+    - targetCorrespondingSourceObject: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2301665512183192210}
+  m_SourcePrefab: {fileID: 100100000, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+--- !u!1 &6435139840760829254 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7366502884066442904, guid: 753bf9c5b1f5941098692c53790c00da, type: 3}
+  m_PrefabInstance: {fileID: 4572603606383520734}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5436168726979313706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435139840760829254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5814491e62744b0f83e3aa88ffe2304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoSetupOnAwake: 1
+  layerSetup:
+    hitboxLayers:
+      serializedVersion: 2
+      m_Bits: 256
+    hurtboxLayers:
+      serializedVersion: 2
+      m_Bits: 512
+    playerLayers:
+      serializedVersion: 2
+      m_Bits: 1024
+    showLayerInfo: 1
+  showDebugInfo: 1
+--- !u!114 &4428722887087061377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435139840760829254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b7a69e8924a42acb6baf3239fe43b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hurtboxLayers:
+    serializedVersion: 2
+    m_Bits: 512
+  showDebugBoxes: 1
+  frameRate: 60
+  stateHitboxes:
+  - stateName: Punch
+    hitboxes:
+    - offset: {x: 1.5, y: 3.25}
+      size: {x: 1.5, y: 0.75}
+      startFrame: 4
+      endFrame: 12
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: Kick
+    hitboxes:
+    - offset: {x: 2, y: -3}
+      size: {x: 1, y: 0.75}
+      startFrame: 4
+      endFrame: 30
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: CrouchPunch
+    hitboxes:
+    - offset: {x: 0.75, y: 0}
+      size: {x: 1.25, y: 0.75}
+      startFrame: 4
+      endFrame: 12
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: CrouchKick
+    hitboxes:
+    - offset: {x: 1, y: -5}
+      size: {x: 1.5, y: 0.5}
+      startFrame: 4
+      endFrame: 17
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: JumpPunch
+    hitboxes:
+    - offset: {x: 1.5, y: 3.25}
+      size: {x: 1.5, y: 0.75}
+      startFrame: 4
+      endFrame: 30
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: JumpKick
+    hitboxes:
+    - offset: {x: 2, y: -3}
+      size: {x: 1, y: 0.75}
+      startFrame: 4
+      endFrame: 30
+      damage: 13
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 512
+      debugColor: {r: 1, g: 0, b: 0, a: 1}
+      showInEditor: 0
+  - stateName: Special
+    hitboxes: []
+  - stateName: Uppercut
+    hitboxes: []
+--- !u!114 &2301665512183192210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6435139840760829254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9d67cef78344a9dae38d792f095cea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebugBoxes: 1
+  frameRate: 60
+  stateHurtboxes:
+  - stateName: Idle
+    hurtboxes:
+    - offset: {x: 0, y: 0}
+      size: {x: 1, y: 3}
+      startFrame: 0
+      endFrame: 0
+      damage: 0
+      targetLayers:
+        serializedVersion: 2
+        m_Bits: 256
+      debugColor: {r: 0, g: 1, b: 0.5536859, a: 1}
+      showInEditor: 0
+  - stateName: Crouch
+    hurtboxes: []
+  - stateName: Jump
+    hurtboxes: []
+  - stateName: Walk
+    hurtboxes: []
+  - stateName: Block
+    hurtboxes: []

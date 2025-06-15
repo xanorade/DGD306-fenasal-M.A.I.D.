@@ -54,12 +54,13 @@ public class FighterController : MonoBehaviour
     
     // Public properties for health system
     public float MaxHealth => maxHealth;
+    public event Action<float, float> OnHealthChanged;  
     public float CurrentHealth => currentHealth;
     public bool IsAlive => currentHealth > 0f;
     public bool HasWon => stateMachine?.CurrentStateType == typeof(WinState);
     public bool IsDead => stateMachine?.CurrentStateType == typeof(DeathState);
     
-
+    [HideInInspector] public RoundManager roundManager;
     
     // State machine reference
     private FighterStateMachine stateMachine;
@@ -134,6 +135,8 @@ public class FighterController : MonoBehaviour
         
         // Initialize health
         currentHealth = maxHealth;
+        
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
         
         // Subscribe to hurtbox events
         if (hurtboxController != null)
@@ -894,6 +897,8 @@ public class FighterController : MonoBehaviour
         // Apply damage
         currentHealth = Mathf.Max(0f, currentHealth - damage);
         
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        
         // Debug log
         string attackerName = attacker != null ? attacker.name : "Unknown";
         Debug.Log($"{gameObject.name} took {damage:F1} damage from {attackerName}'s {attackType}. Health: {currentHealth:F1}/{maxHealth:F1}");
@@ -935,6 +940,10 @@ public class FighterController : MonoBehaviour
         
         // Check if opponent should win
         CheckOpponentWinCondition();
+        if (roundManager != null)
+        {
+            roundManager.OnFighterDefeated(this);
+        }
     }
     
     private void CheckOpponentWinCondition()
@@ -975,6 +984,7 @@ public class FighterController : MonoBehaviour
         if (!IsAlive) return;
         
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
         UpdateStateText(currentStateName);
         
         Debug.Log($"{gameObject.name} healed for {amount:F1}. Health: {currentHealth:F1}/{maxHealth:F1}");
@@ -984,6 +994,7 @@ public class FighterController : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
         lastAttackTaken = "";
         lastDamageTaken = 0f;
         lastAttacker = null;
