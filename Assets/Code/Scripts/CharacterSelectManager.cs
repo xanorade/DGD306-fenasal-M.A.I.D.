@@ -142,6 +142,6 @@ public class CharacterSelectManager : MonoBehaviour
     private IEnumerator StartFightCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("FightScene");
+        SceneManager.LoadScene("MapSelectScene"); 
     }
 }

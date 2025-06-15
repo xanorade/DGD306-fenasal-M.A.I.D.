@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject player1Prefab;
     public GameObject player2Prefab;
+    
+    public GameObject selectedMapPrefab;
 
     void Awake()
     {
