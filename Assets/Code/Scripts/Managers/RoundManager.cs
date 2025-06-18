@@ -62,7 +62,8 @@ public class RoundManager : MonoBehaviour
         player1.FlipCharacter(true);
 
         roundAnnouncerText.gameObject.SetActive(true);
-        if (currentRound == totalRoundsToWin)
+        
+        if (p1Wins == 1 && p2Wins == 1)
         {
             roundAnnouncerText.text = "Final Round";
             if (AudioManager.instance != null) AudioManager.instance.PlaySFX("AnnouncerFinalRound");
@@ -82,7 +83,7 @@ public class RoundManager : MonoBehaviour
 
         if (AudioManager.instance != null)
         {
-            if (currentRound == totalRoundsToWin)
+            if (p1Wins == 1 && p2Wins == 1)
             {
                 AudioManager.instance.PlayMusic("FinalRoundMusic");
             }
@@ -147,8 +148,10 @@ public class RoundManager : MonoBehaviour
         else
         {
             p1Wins++;
+            p2Wins++;
             player1WinDisplay.UpdateWinIcons(p1Wins);
-            player1.TriggerWin();
+            player2WinDisplay.UpdateWinIcons(p2Wins);
+            Debug.Log("DRAW!");
         }
         StartCoroutine(EndRoundSequence());
     }
@@ -163,13 +166,13 @@ public class RoundManager : MonoBehaviour
         if (defeatedFighter == player1)
         {
             p2Wins++;
-            player2WinDisplay.UpdateWinIcons(p2Wins); // YENİ
+            player2WinDisplay.UpdateWinIcons(p2Wins);
             player2.TriggerWin();
         }
         else
         {
             p1Wins++;
-            player1WinDisplay.UpdateWinIcons(p1Wins); // YENİ
+            player1WinDisplay.UpdateWinIcons(p1Wins);
             player1.TriggerWin();   
         }
         StartCoroutine(EndRoundSequence());
