@@ -9,7 +9,7 @@
                     "name": "Navigate",
                     "type": "Value",
                     "id": "15b08f8d-f06a-42c6-b58b-a008377e79a0",
-                    "expectedControlType": "Dpad",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -31,27 +31,124 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "85d069ff-b636-47c3-8942-78d80fdfc955",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "875c29c2-1df9-4f8f-8771-d76bf3994512",
-                    "path": "*/{Hatswitch}",
+                    "path": "<Joystick>/hat",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "5f42f6cc-4eaf-4a48-be69-9d041fc59be2",
-                    "path": "<Gamepad>/buttonSouth",
+                    "id": "875c29c2-1df9-4f8f-8771-d76bf3994513",
+                    "path": "<Joystick1>/hat",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Arrows",
+                    "id": "9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
+                    "action": "Navigate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "30e5e831-4925-4dcc-8b5a-24e6a91cf223",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "0130266d-ea6b-49f8-8344-9db6b16e4ca1",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "fce2aa0e-7aea-4537-bc24-2e7c34abd72f",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "62603c0c-c539-47b4-9e91-b6eb5b5e6b72",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "5f42f6cc-4eaf-4a48-be69-9d041fc59be2",
+                    "path": "<Joystick>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick1",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f42f6cc-4eaf-4a48-be69-9d041fc59be3",
+                    "path": "<Joystick1>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "73644a6e-5a8c-4e9d-8e8b-8e4e4d8e0b9c",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Submit",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -59,11 +156,66 @@
                 {
                     "name": "",
                     "id": "2dc2a3c1-77fb-4321-9db5-18b5d047998d",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Joystick>/button3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2dc2a3c1-77fb-4321-9db5-18b5d047998e",
+                    "path": "<Joystick1>/button3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3d5f7e9-c1a2-4e6f-9a8b-d0c2e4f6a8b0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3d5f7e9-c1a2-4e6f-9a8b-d0c2e4f6a8b1",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3d5f7e9-c1a2-4e6f-9a8b-d0c2e4f6a8b2",
+                    "path": "<Joystick>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick1",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3d5f7e9-c1a2-4e6f-9a8b-d0c2e4f6a8b3",
+                    "path": "<Joystick>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -77,7 +229,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "b9c28e1d-673b-4148-a12a-cde6aa9676b9",
-                    "expectedControlType": "Dpad",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -112,16 +264,7 @@
                 {
                     "name": "Special",
                     "type": "Button",
-                    "id": "e177685f-290c-43e6-965c-705634601e50",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "cdedfdba-4fc0-4ca0-8678-7b3480e4f4ff",
+                    "id": "3df866dc-8fe6-4f08-9394-1900fbb7b089",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -131,67 +274,67 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "c848348d-f17d-4b7d-b5bb-73920ea2272d",
-                    "path": "*/{Hatswitch}",
+                    "id": "978bfe49-cc26-4a3d-ab7b-7d7a29327403",
+                    "path": "<Joystick>/hat",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "a2d1c400-c7db-4188-bee0-37f927f2b42c",
-                    "path": "*/{PrimaryAction}",
+                    "id": "978bfe49-cc26-4a3d-ab7b-7d7a29327404",
+                    "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe91",
+                    "path": "<Joystick>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick1",
                     "action": "Punch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "5c26aea8-29b8-4ad1-964d-36d8cb2693c0",
-                    "path": "*/{SecondaryAction}",
+                    "id": "05f6913d-c316-48b2-a6bb-e225f14c7960",
+                    "path": "<Joystick>/button3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Kick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "137dabee-fd5e-4bb9-a8a3-d9825e3c110f",
-                    "path": "*/{Back}",
+                    "id": "886e731e-7071-4ae4-95c0-e61739dad6fd",
+                    "path": "<Joystick>/button4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "e5fb05ba-405a-43bb-8bdc-d35c1055ecb8",
-                    "path": "",
+                    "id": "886e731e-7071-4ae4-95c0-e61739dad6fe",
+                    "path": "<Joystick>/button5",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick1",
                     "action": "Special",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f36c9e84-85b1-4c9c-85a5-9c8326d4cbec",
-                    "path": "*/{Menu}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -199,13 +342,13 @@
         },
         {
             "name": "Player2",
-            "id": "edceeae4-ad48-4823-af11-6394fa168451",
+            "id": "c045777a-737b-44c8-8b94-ddef1c5c8188",
             "actions": [
                 {
                     "name": "Move",
                     "type": "Value",
-                    "id": "04212025-69d2-45fd-b935-8663d58da858",
-                    "expectedControlType": "Dpad",
+                    "id": "b9c28e1d-673b-4148-a12a-cde6aa9676ba",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -213,7 +356,7 @@
                 {
                     "name": "Punch",
                     "type": "Button",
-                    "id": "bb6b4c32-8ab2-4088-b6c8-5158b3b14591",
+                    "id": "6f118475-4d60-4ab8-b923-275d030ce1b0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -222,7 +365,7 @@
                 {
                     "name": "Kick",
                     "type": "Button",
-                    "id": "044698ea-c1c7-4862-86f6-7c7215237f4d",
+                    "id": "78fd7dc1-f935-4e47-8dfa-673cffaa1bab",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -231,7 +374,7 @@
                 {
                     "name": "Jump",
                     "type": "Button",
-                    "id": "e49da26e-d32d-4324-b632-1cb474e3b8fd",
+                    "id": "3df866dc-8fe6-4f08-9394-1900fbb7b089",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -240,16 +383,7 @@
                 {
                     "name": "Special",
                     "type": "Button",
-                    "id": "e28aa326-5013-431a-a5ad-035b0000a54d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "9cbfd891-936d-429a-8179-f328cf657b2b",
+                    "id": "3df866dc-8fe6-4f08-9394-1900fbb7b090",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -259,67 +393,67 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "75dc6123-417e-4d4d-aac9-ae775a80cbda",
-                    "path": "*/{Hatswitch}",
+                    "id": "978bfe49-cc26-4a3d-ab7b-7d7a29327405",
+                    "path": "<Joystick>/hat",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick2",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "5075d04c-5793-41f8-acd7-dbedbd5ce436",
-                    "path": "*/{PrimaryAction}",
+                    "id": "978bfe49-cc26-4a3d-ab7b-7d7a29327406",
+                    "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick2",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "143bb1cd-cc10-4eca-a2f0-a3664166fe92",
+                    "path": "<Joystick>/button2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
                     "action": "Punch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "94ae8c41-83fb-41ec-a990-f27c7e24c0b5",
-                    "path": "*/{SecondaryAction}",
+                    "id": "05f6913d-c316-48b2-a6bb-e225f14c7961",
+                    "path": "<Joystick>/button3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick2",
                     "action": "Kick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "35da5992-8f23-4563-b65c-1fd54b67fa9b",
-                    "path": "*/{Back}",
+                    "id": "886e731e-7071-4ae4-95c0-e61739dad6ff",
+                    "path": "<Joystick>/button4",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick2",
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "ef8a5d79-bcf2-4511-b29b-93e87effc99f",
-                    "path": "",
+                    "id": "886e731e-7071-4ae4-95c0-e61739dad700",
+                    "path": "<Joystick>/button5",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Joystick2",
                     "action": "Special",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c533e542-2be9-4080-8554-cb8b3bbb5864",
-                    "path": "*/{Menu}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -328,8 +462,30 @@
     ],
     "controlSchemes": [
         {
-            "name": "Arcade",
-            "bindingGroup": "Arcade",
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Joystick1",
+            "bindingGroup": "Joystick1",
+            "devices": [
+                {
+                    "devicePath": "<Joystick>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Joystick2",
+            "bindingGroup": "Joystick2",
             "devices": [
                 {
                     "devicePath": "<Joystick>",
@@ -339,4 +495,4 @@
             ]
         }
     ]
-}
+} 
