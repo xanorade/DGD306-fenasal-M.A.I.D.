@@ -15,20 +15,30 @@ public class PauseManager : MonoBehaviour
         IsGamePaused = false;
         Time.timeScale = 1f;
         pauseMenuPanel.SetActive(false);
+        
+        // Subscribe to pause input
+        SubscribeToInputEvents();
     }
 
-    void Update()
+    private void SubscribeToInputEvents()
     {
-        if (Input.GetButtonDown("Pause"))
+        InputManager.OnPause += HandlePauseInput;
+    }
+
+    private void UnsubscribeFromInputEvents()
+    {
+        InputManager.OnPause -= HandlePauseInput;
+    }
+
+    private void HandlePauseInput()
+    {
+        if (IsGamePaused)
         {
-            if (IsGamePaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            Resume();
+        }
+        else
+        {
+            Pause();
         }
     }
 
@@ -37,6 +47,12 @@ public class PauseManager : MonoBehaviour
         pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f;
         IsGamePaused = false;
+        
+        // Re-enable gameplay controls
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableGameplayControls();
+        }
     }
 
     void Pause()
@@ -44,6 +60,12 @@ public class PauseManager : MonoBehaviour
         pauseMenuPanel.SetActive(true);
         Time.timeScale = 0f;
         IsGamePaused = true;
+
+        // Enable UI controls for pause menu
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableUIControls();
+        }
 
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(pauseMenuFirstButton);
@@ -55,5 +77,10 @@ public class PauseManager : MonoBehaviour
         IsGamePaused = false;
         
         SceneManager.LoadScene("TitleScene"); 
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromInputEvents();
     }
 }

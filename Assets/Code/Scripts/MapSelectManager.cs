@@ -12,6 +12,7 @@ public class SelectableMap
     public Sprite mapIcon;
     public GameObject mapPrefab;
 }
+
 public class MapSelectManager : MonoBehaviour
 {
     [Header("Map List")]
@@ -37,23 +38,38 @@ public class MapSelectManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         UpdateSelection(0);
+        
+        // Enable UI controls for menu navigation
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableUIControls();
+        }
+        
+        // Subscribe to input events
+        SubscribeToInputEvents();
     }
 
-    void Update()
+    private void SubscribeToInputEvents()
     {
-        HandleNavigation();
-        HandleSelection();
+        InputManager.OnUINavigate += HandleNavigation;
+        InputManager.OnUISubmit += HandleSelection;
     }
 
-    void HandleNavigation()
+    private void UnsubscribeFromInputEvents()
+    {
+        InputManager.OnUINavigate -= HandleNavigation;
+        InputManager.OnUISubmit -= HandleSelection;
+    }
+
+    private void HandleNavigation(Vector2 navigation)
     {
         int prevIndex = currentIndex;
 
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (navigation.x < -0.5f) // Left
         {
             currentIndex--;
         }
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (navigation.x > 0.5f) // Right
         {
             currentIndex++;
         }
@@ -75,15 +91,7 @@ public class MapSelectManager : MonoBehaviour
         mapNameText.text = mapList[currentIndex].mapName;
     }
 
-    void HandleSelection()
-    {
-        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Return))
-        {
-            SelectMapAndStartFight();
-        }
-    }
-
-    void SelectMapAndStartFight()
+    private void HandleSelection()
     {
         if (GameManager.instance == null)
         {
@@ -92,12 +100,18 @@ public class MapSelectManager : MonoBehaviour
         }
 
         GameManager.instance.selectedMapPrefab = mapList[currentIndex].mapPrefab;
+        Debug.Log("Map selected: " + mapList[currentIndex].mapName);
 
-        // Bu iki debug satırı çok önemli
-        Debug.Log("MAP SELECT SCENE: GameManager'a atanan prefab: " + (GameManager.instance.selectedMapPrefab != null ? GameManager.instance.selectedMapPrefab.name : "NULL"));
-        Debug.Log("MAP SELECT SCENE: GameManager instance ID: " + GameManager.instance.GetInstanceID());
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("ButtonClick");
+        }
 
-        AudioManager.instance.PlaySFX("ButtonClick");
         SceneManager.LoadScene("FightScene");
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromInputEvents();
     }
 }
