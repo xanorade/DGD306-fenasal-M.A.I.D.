@@ -32,6 +32,11 @@ public class RoundManager : MonoBehaviour
     private Transform p1StartPos;
     private Transform p2StartPos;
     private bool isRoundOver = false;
+    
+    // Game Over UI state
+    private bool isGameOverUIActive = false;
+    private int gameOverButtonIndex = 0; // 0 = Rematch, 1 = Quit to Title
+    private const int totalGameOverButtons = 2;
 
     public void Initialize(FighterController p1, FighterController p2, Transform p1Spawn, Transform p2Spawn)
     {
@@ -48,6 +53,37 @@ public class RoundManager : MonoBehaviour
         player2WinDisplay.ResetIcons();
         
         StartCoroutine(StartRoundCoroutine());
+    }
+
+    private void Start()
+    {
+        // Subscribe to input events for game over UI
+        SubscribeToInputEvents();
+    }
+
+    private void SubscribeToInputEvents()
+    {
+        Debug.Log("RoundManager: Subscribing to input events");
+        
+        // Subscribe to UI navigation and submit events
+        InputManager.OnUINavigate += HandleGameOverNavigation;
+        InputManager.OnUISubmit += HandleGameOverSubmit;
+        
+        // Also subscribe to individual player inputs for game over selection
+        InputManager.OnPlayer1Punch += HandlePlayer1GameOverSelection;
+        InputManager.OnPlayer2Punch += HandlePlayer2GameOverSelection;
+        
+        Debug.Log("RoundManager: Input events subscribed");
+    }
+
+    private void UnsubscribeFromInputEvents()
+    {
+        Debug.Log("RoundManager: Unsubscribing from input events");
+        
+        InputManager.OnUINavigate -= HandleGameOverNavigation;
+        InputManager.OnUISubmit -= HandleGameOverSubmit;
+        InputManager.OnPlayer1Punch -= HandlePlayer1GameOverSelection;
+        InputManager.OnPlayer2Punch -= HandlePlayer2GameOverSelection;
     }
 
     private IEnumerator StartRoundCoroutine()
@@ -183,18 +219,129 @@ public class RoundManager : MonoBehaviour
         Debug.Log("MATCH OVER!");
         winnerText.text = "PLAYER " + winnerPlayerIndex + " WINS";
         gameOverPanel.SetActive(true);
+        
+        // Enable game over UI state and UI controls
+        isGameOverUIActive = true;
+        gameOverButtonIndex = 0; // Start with Rematch button selected
+        
+        // Enable UI controls for the new input system
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableUIControls();
+        }
 
+        // Still keep EventSystem selection as fallback
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(rematchButton);
+        
+        UpdateGameOverButtonHighlight();
+    }
+
+    private void HandleGameOverNavigation(Vector2 navigation)
+    {
+        if (!isGameOverUIActive) return;
+        
+        Debug.Log($"RoundManager: HandleGameOverNavigation called with {navigation}");
+        
+        // Use higher threshold to avoid accidental navigation
+        float threshold = 0.7f;
+        int prevIndex = gameOverButtonIndex;
+
+        // Handle vertical navigation (up/down)
+        if (navigation.y > threshold) // Up
+        {
+            gameOverButtonIndex--;
+        }
+        else if (navigation.y < -threshold) // Down
+        {
+            gameOverButtonIndex++;
+        }
+        
+        // Wrap around
+        if (gameOverButtonIndex < 0) gameOverButtonIndex = totalGameOverButtons - 1;
+        if (gameOverButtonIndex >= totalGameOverButtons) gameOverButtonIndex = 0;
+        
+        if (prevIndex != gameOverButtonIndex)
+        {
+            UpdateGameOverButtonHighlight();
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX("ButtonSelect");
+            }
+        }
+    }
+
+    private void UpdateGameOverButtonHighlight()
+    {
+        // Update EventSystem selection based on current index
+        GameObject buttonToSelect = (gameOverButtonIndex == 0) ? rematchButton : 
+                                   rematchButton.transform.parent.Find("Quit To Main Menu")?.gameObject;
+        
+        if (buttonToSelect != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(buttonToSelect);
+        }
+    }
+
+    private void HandleGameOverSubmit()
+    {
+        if (!isGameOverUIActive) return;
+        
+        Debug.Log("RoundManager: HandleGameOverSubmit called");
+        
+        ExecuteGameOverSelection();
+    }
+
+    private void HandlePlayer1GameOverSelection()
+    {
+        if (!isGameOverUIActive) return;
+        
+        Debug.Log("RoundManager: HandlePlayer1GameOverSelection called");
+        
+        ExecuteGameOverSelection();
+    }
+
+    private void HandlePlayer2GameOverSelection()
+    {
+        if (!isGameOverUIActive) return;
+        
+        Debug.Log("RoundManager: HandlePlayer2GameOverSelection called");
+        
+        ExecuteGameOverSelection();
+    }
+
+    private void ExecuteGameOverSelection()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("ButtonClick");
+        }
+        
+        if (gameOverButtonIndex == 0)
+        {
+            Rematch();
+        }
+        else
+        {
+            QuitToTitle();
+        }
     }
     
     public void Rematch()
     {
+        isGameOverUIActive = false;
         SceneManager.LoadScene("CharacterSelectScene");
     }
 
     public void QuitToTitle()
     {
+        isGameOverUIActive = false;
         SceneManager.LoadScene("TitleScene");
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromInputEvents();
     }
 }

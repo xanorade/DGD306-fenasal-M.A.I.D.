@@ -50,25 +50,51 @@ public class InputManager : MonoBehaviour
     {
         Debug.Log("InputManager: Awake called");
         
+        // Handle singleton logic more robustly
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Debug.Log("InputManager: Instance created and set to DontDestroyOnLoad");
             
-            // Initialize available devices
-            RefreshAvailableDevices();
-            
-            // Subscribe to device change events
-            InputSystem.onDeviceChange += OnDeviceChange;
+            // Initialize everything for the first instance
+            InitializeManager();
+        }
+        else if (Instance == this)
+        {
+            // This is the same instance being reactivated (shouldn't happen but just in case)
+            Debug.Log("InputManager: Same instance reactivated");
+            return;
         }
         else
         {
-            Debug.Log("InputManager: Instance already exists, destroying duplicate");
-            Destroy(gameObject);
-            return;
+            // Check if the existing instance is still valid and functional
+            if (Instance != null && Instance.gameObject != null)
+            {
+                Debug.Log("InputManager: Instance already exists and is valid, destroying duplicate");
+                Destroy(gameObject);
+                return;
+            }
+            else
+            {
+                // The existing instance is broken/destroyed, replace it
+                Debug.LogWarning("InputManager: Existing instance was broken, replacing with new one");
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                InitializeManager();
+            }
         }
+    }
+    
+    private void InitializeManager()
+    {
+        // Initialize available devices
+        RefreshAvailableDevices();
         
+        // Subscribe to device change events
+        InputSystem.onDeviceChange += OnDeviceChange;
+        
+        // Initialize input actions
         InitializeInputActions();
     }
     
