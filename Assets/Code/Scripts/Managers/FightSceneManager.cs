@@ -40,7 +40,11 @@ public class FightSceneManager : MonoBehaviour
         FighterController p1Controller = p1Object.GetComponent<FighterController>();
         FighterController p2Controller = p2Object.GetComponent<FighterController>();
         
-        // 4. Rakip ve UI Bağlantılarını Kur
+        // 4. CRITICAL FIX: Set correct player indices regardless of prefab settings
+        SetupPlayerControl(p1Object, 1); // Player 1 gets index 1
+        SetupPlayerControl(p2Object, 2); // Player 2 gets index 2
+        
+        // 5. Rakip ve UI Bağlantılarını Kur
         p1Controller.SetOpponent(p2Object.transform);
         p2Controller.SetOpponent(p1Object.transform);
 
@@ -63,6 +67,39 @@ public class FightSceneManager : MonoBehaviour
         else
         {
             Debug.LogError("FightSceneManager'a RoundManager referansı atanmamış!");
+        }
+    }
+    
+    /// <summary>
+    /// Sets up player control by assigning correct player index to both FighterController and PlayerInputHandler
+    /// </summary>
+    /// <param name="playerObject">The spawned player GameObject</param>
+    /// <param name="correctPlayerIndex">The correct player index (1 or 2)</param>
+    private void SetupPlayerControl(GameObject playerObject, int correctPlayerIndex)
+    {
+        // Update FighterController player index
+        FighterController fighterController = playerObject.GetComponent<FighterController>();
+        if (fighterController != null)
+        {
+            fighterController.SetPlayerIndex(correctPlayerIndex);
+            Debug.Log($"Set FighterController player index to {correctPlayerIndex} for {playerObject.name}");
+        }
+        
+        // Update PlayerInputHandler player index
+        PlayerInputHandler inputHandler = playerObject.GetComponent<PlayerInputHandler>();
+        if (inputHandler != null)
+        {
+            // Set the correct player index using the new method
+            var playerIndexEnum = (correctPlayerIndex == 1) ? 
+                PlayerInputHandler.PlayerIndex.Player1 : 
+                PlayerInputHandler.PlayerIndex.Player2;
+            
+            inputHandler.ChangePlayerIndex(playerIndexEnum);
+            Debug.Log($"Set PlayerInputHandler player index to {playerIndexEnum} for {playerObject.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"No PlayerInputHandler found on {playerObject.name}");
         }
     }
 }

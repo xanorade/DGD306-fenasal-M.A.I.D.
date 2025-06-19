@@ -161,5 +161,26 @@ namespace DGD306.Character
         {
             UnsubscribeFromInputEvents();
         }
+        
+        /// <summary>
+        /// Changes the player index dynamically and re-subscribes to the correct input events
+        /// This is used by FightSceneManager to fix character control assignments
+        /// </summary>
+        /// <param name="newPlayerIndex">The new player index to assign</param>
+        public void ChangePlayerIndex(PlayerIndex newPlayerIndex)
+        {
+            if (playerIndex == newPlayerIndex) return; // No change needed
+            
+            Debug.Log($"PlayerInputHandler: Changing player index from {playerIndex} to {newPlayerIndex} on {gameObject.name}");
+            
+            // Unsubscribe from current events
+            UnsubscribeFromInputEvents();
+            
+            // Change the player index
+            playerIndex = newPlayerIndex;
+            
+            // Re-subscribe to the correct events
+            SubscribeToInputEvents();
+        }
     }
 }

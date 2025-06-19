@@ -749,6 +749,7 @@ public class FighterController : MonoBehaviour
     public void SetOpponent(Transform opponent)
     {
         opponentTransform = opponent;
+        Debug.Log($"{gameObject.name} opponent set to: {(opponent != null ? opponent.name : "null")}");
         
         // Initialize pass-by detection
         if (opponentTransform != null)
@@ -756,6 +757,34 @@ public class FighterController : MonoBehaviour
             lastPlayerPosX = transform.position.x;
             lastOpponentPosX = opponentTransform.position.x;
         }
+    }
+    
+    /// <summary>
+    /// Sets the player index for this fighter controller.
+    /// This is used by FightSceneManager to fix character control assignments.
+    /// </summary>
+    /// <param name="newPlayerIndex">The new player index (1 or 2)</param>
+    public void SetPlayerIndex(int newPlayerIndex)
+    {
+        if (newPlayerIndex != 1 && newPlayerIndex != 2)
+        {
+            Debug.LogError($"Invalid player index {newPlayerIndex}. Must be 1 or 2.");
+            return;
+        }
+        
+        Debug.Log($"FighterController: Changing player index from {playerIndex} to {newPlayerIndex} on {gameObject.name}");
+        playerIndex = newPlayerIndex;
+        
+        // Update state text to reflect the change
+        UpdateStateText(currentStateName);
+    }
+    
+    /// <summary>
+    /// Gets the current player index
+    /// </summary>
+    public int GetPlayerIndex()
+    {
+        return playerIndex;
     }
     
     // Method to trigger animation by state type
