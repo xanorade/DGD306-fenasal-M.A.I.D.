@@ -316,7 +316,6 @@ public class InputManager : MonoBehaviour
     private void OnNavigatePerformed(InputAction.CallbackContext context)
     {
         Vector2 navigation = context.ReadValue<Vector2>();
-        Debug.Log($"InputManager: Navigate performed with value: {navigation}");
         OnUINavigate?.Invoke(navigation);
     }
     
