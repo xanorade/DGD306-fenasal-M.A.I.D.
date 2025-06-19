@@ -193,7 +193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatorController: {fileID: 9100000, guid: b7eb58b00b07844208a89f2ff0063c7c, type: 2}
   idleAnimation: {fileID: 7400000, guid: 706ff113a645646b4b45ba69e2308e82, type: 2}
-  walkAnimation: {fileID: 7400000, guid: 706ff113a645646b4b45ba69e2308e82, type: 2}
+  walkAnimation: {fileID: 7400000, guid: d85d31d5b58ad4ae480362e647c0f47b, type: 2}
   jumpStartAnimation: {fileID: 7400000, guid: aaece62864f6a41d8abbbc37eb90af07, type: 2}
   jumpLoopAnimation: {fileID: 7400000, guid: 1e4b75d842ef04266bce905fe386e4ae, type: 2}
   crouchAnimation: {fileID: 7400000, guid: 627f9b4a94e0443c4b04e91f1e41af78, type: 2}
@@ -207,8 +207,8 @@ MonoBehaviour:
   crouchKickAnimation: {fileID: 7400000, guid: f3e9460451fb24106aafd5b0a826ccf2, type: 2}
   jumpPunchAnimation: {fileID: 7400000, guid: 7fdf69a86b5144a92a8d5541c59c2066, type: 2}
   jumpKickAnimation: {fileID: 7400000, guid: 45914d9cf337944aeae6306c4c594861, type: 2}
-  winAnimation: {fileID: 7400000, guid: 706ff113a645646b4b45ba69e2308e82, type: 2}
-  deathAnimation: {fileID: 0}
+  winAnimation: {fileID: 7400000, guid: f7a4ff29197c44887ba084fbc464c4c0, type: 2}
+  deathAnimation: {fileID: 7400000, guid: 0b8d9edd8992c40aba26a85169842574, type: 2}
 --- !u!212 &6039017578249544364
 SpriteRenderer:
   m_ObjectHideFlags: 0
