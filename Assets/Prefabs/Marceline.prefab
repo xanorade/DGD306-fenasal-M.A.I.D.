@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 3140142772823483745}
   - component: {fileID: 7737679052575796879}
   - component: {fileID: 4171725607981646950}
+  - component: {fileID: 7595505662794561160}
   m_Layer: 9
   m_Name: Marceline
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   directionArrowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   playerIndex: 1
   isControlledExternally: 0
+  roundManager: {fileID: 0}
 --- !u!50 &9182939997796373046
 Rigidbody2D:
   serializedVersion: 4
@@ -413,3 +415,20 @@ MonoBehaviour:
     hurtboxes: []
   - stateName: Block
     hurtboxes: []
+--- !u!114 &7595505662794561160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7366502884066442904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e27e3f5b4c6fcd44a5c38c40048898f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchSound: {fileID: 8300000, guid: f821ec7178b2ddc419b54c108ab87c03, type: 3}
+  kickSound: {fileID: 8300000, guid: 830bda2b31e3f3e488363e37c18ae695, type: 3}
+  takeDamageSound: {fileID: 8300000, guid: 5a6d6f072f0f6684ea79ae947de820a8, type: 3}
+  winSound: {fileID: 8300000, guid: c023155f298633941b3aa39dbf9c542e, type: 3}
+  deathSound: {fileID: 0}

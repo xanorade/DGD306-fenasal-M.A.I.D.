@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 812202130528894837}
   - component: {fileID: 8621181035472381987}
   - component: {fileID: 3198915947622170933}
+  - component: {fileID: 7169027603963313060}
   m_Layer: 9
   m_Name: Isabella
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   directionArrowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   playerIndex: 1
   isControlledExternally: 0
+  roundManager: {fileID: 0}
 --- !u!50 &5936873296783562690
 Rigidbody2D:
   serializedVersion: 4
@@ -413,3 +415,20 @@ MonoBehaviour:
     hurtboxes: []
   - stateName: Block
     hurtboxes: []
+--- !u!114 &7169027603963313060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8596292236148360635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e27e3f5b4c6fcd44a5c38c40048898f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchSound: {fileID: 8300000, guid: 6145a66c29eafa840877d8dc9943de3f, type: 3}
+  kickSound: {fileID: 8300000, guid: da8cde0da99e851469730d40c420598a, type: 3}
+  takeDamageSound: {fileID: 8300000, guid: 3525d438feb7b8940ac86f669f42fb3b, type: 3}
+  winSound: {fileID: 8300000, guid: 20d23707f0c8d6749a4feb01d4e6c81f, type: 3}
+  deathSound: {fileID: 8300000, guid: ac14cdc4e0ce82a40b5cae2697cda3e8, type: 3}

@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6506387016493766794}
   - component: {fileID: 3490419259823581012}
   - component: {fileID: 7068646981987345275}
+  - component: {fileID: 2757340976362567135}
   m_Layer: 9
   m_Name: Alia
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   directionArrowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   playerIndex: 1
   isControlledExternally: 0
+  roundManager: {fileID: 0}
 --- !u!50 &6459147443620567733
 Rigidbody2D:
   serializedVersion: 4
@@ -413,3 +415,19 @@ MonoBehaviour:
     hurtboxes: []
   - stateName: Block
     hurtboxes: []
+--- !u!114 &2757340976362567135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796444812572736535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e27e3f5b4c6fcd44a5c38c40048898f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchSound: {fileID: 8300000, guid: c5be46b5fdbc9a14bacead90e8a91e4d, type: 3}
+  kickSound: {fileID: 8300000, guid: 0583f629e7fbdf8448c6b86b249d4e88, type: 3}
+  takeDamageSound: {fileID: 8300000, guid: 17a8dcc277603dc41ab45fcb115b0bed, type: 3}
+  winSound: {fileID: 8300000, guid: a181dd56278621f44b4516f183e8852a, type: 3}

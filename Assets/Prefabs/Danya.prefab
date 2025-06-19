@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 5945368508380158999}
   - component: {fileID: 5220573510437305414}
   - component: {fileID: 7972941110832402901}
+  - component: {fileID: 4504441967194558480}
   m_Layer: 9
   m_Name: Danya
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   directionArrowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   playerIndex: 1
   isControlledExternally: 0
+  roundManager: {fileID: 0}
 --- !u!50 &4167289810045539100
 Rigidbody2D:
   serializedVersion: 4
@@ -413,3 +415,19 @@ MonoBehaviour:
     hurtboxes: []
   - stateName: Block
     hurtboxes: []
+--- !u!114 &4504441967194558480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8505579143268767358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e27e3f5b4c6fcd44a5c38c40048898f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchSound: {fileID: 8300000, guid: 0d156f6a9b5e7e642b3de35491a5bc65, type: 3}
+  kickSound: {fileID: 8300000, guid: 721f5ee33c3a0894f82c0638be3e2815, type: 3}
+  takeDamageSound: {fileID: 8300000, guid: c2d88b858d4d261428335e4511b68115, type: 3}
+  winSound: {fileID: 8300000, guid: 28c8f2c38214529499afc975ac8e8bba, type: 3}
