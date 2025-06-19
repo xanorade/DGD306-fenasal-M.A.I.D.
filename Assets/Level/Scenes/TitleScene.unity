@@ -1817,6 +1817,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player1Prefab: {fileID: 3246676143699505331, guid: 6c1d29113adaca945bb3ca4b5a7b0189, type: 3}
   player2Prefab: {fileID: 6435139840760829254, guid: 66ae770600870f54289986a1fc44c554, type: 3}
+  selectedMapPrefab: {fileID: 0}
 --- !u!1 &458907431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,7 +2429,9 @@ MonoBehaviour:
     Gizmen\r\n\r\nBackground Artist\r\nAy\u015Fenur Abd\xFCsselamo\u011Flu\r\n\r\nUI
     Design\r\nEy\xFCp Can Erkal\n\n\n\n\n\nSOUND & MUSIC\r\n\r\nMusic & Sound Design\r\n
     Ey\xFCp Can Erkal\n\n\n\n\n\nPRODUCTION\r\n\r\nProject Management & Documentation\r\nCennet
-    Gizmen\n\n\n\n\n\nM.A.I.D\r\n\xA9 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
+    Gizmen\n\n\n\n\n\nSpecial thanks to Anthropic for making Claude\_Sonnet\_4.\nSpecial
+    thanks to Google for making Gemini.\nSpecial thanks to Doechii for making DENIAL
+    IS A RIVER.\n\n\n\n\nM.A.I.D\r\n\xA9 2025\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
     \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b5f36f8fa17f5bf44b54ec7e9d10b623, type: 2}

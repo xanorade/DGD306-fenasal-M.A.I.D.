@@ -93,7 +93,6 @@ public class MapSelectManager : MonoBehaviour
 
         GameManager.instance.selectedMapPrefab = mapList[currentIndex].mapPrefab;
 
-        // Bu iki debug satırı çok önemli
         Debug.Log("MAP SELECT SCENE: GameManager'a atanan prefab: " + (GameManager.instance.selectedMapPrefab != null ? GameManager.instance.selectedMapPrefab.name : "NULL"));
         Debug.Log("MAP SELECT SCENE: GameManager instance ID: " + GameManager.instance.GetInstanceID());
 

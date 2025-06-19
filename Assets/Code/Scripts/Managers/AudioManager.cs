@@ -27,7 +27,6 @@ public class AudioManager : MonoBehaviour
     
     private AudioSource currentMusicSource;
 
-    // YENİ EKLENEN SATIR: CharacterAudio gibi dış scriptlerden gelen klipleri çalmak için genel bir kaynak
     private AudioSource sfxSource;
 
     void Awake()
@@ -45,11 +44,8 @@ public class AudioManager : MonoBehaviour
         }
         #endregion
 
-        // YENİ EKLENEN SATIR: Genel SFX kaynağını oluştur ve ayarla
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.playOnAwake = false;
-        // İsterseniz tüm SFX'lerin çıkacağı varsayılan bir mixer grubu atayabilirsiniz
-        // sfxSource.outputAudioMixerGroup = ... ; 
 
         InitializeSounds(musicTracks);
         InitializeSounds(sfxSounds);
@@ -63,7 +59,7 @@ public class AudioManager : MonoBehaviour
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             s.source.volume = s.volume;
-            s.source.pitch = 1f; // Pitch'i kaldırmıştık, varsayılan olarak 1 ayarlayalım
+            s.source.pitch = 1f;
             s.source.loop = s.loop;
             s.source.outputAudioMixerGroup = s.output;
             s.source.playOnAwake = false;
@@ -72,7 +68,6 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        // Başlangıçta çalacak bir müziğiniz olduğundan emin olun, yoksa bu satır hata verebilir
          PlayMusic("MainMenuMusic");
     }
 
@@ -116,10 +111,8 @@ public class AudioManager : MonoBehaviour
         musicSource.volume = startVolume;
     }
 
-    // DÜZELTİLMİŞ FONKSİYON: İsme göre SFX çalar
     public void PlaySFX(string name)
     {
-        // Hem sfxSounds hem de uiSounds dizilerinde arama yap
         Sound s = Array.Find(sfxSounds, sound => sound.name == name);
         if (s == null)
         {
@@ -132,16 +125,13 @@ public class AudioManager : MonoBehaviour
             return;
         }
         
-        // Bu sese özel olarak oluşturulmuş AudioSource'u kullan ve PlayOneShot ile çal
         s.source.PlayOneShot(s.source.clip);
     }
     
-    // DÜZELTİLMİŞ FONKSİYON: Dışarıdan gelen AudioClip'i çalar
     public void PlaySFX(AudioClip clip)
     {
         if (clip != null)
         {
-            // Bu tür genel sesler için oluşturduğumuz sfxSource'u kullan
             sfxSource.PlayOneShot(clip);
         }
         else

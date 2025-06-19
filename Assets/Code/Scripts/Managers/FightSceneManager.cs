@@ -6,7 +6,6 @@ public class FightSceneManager : MonoBehaviour
     [Header("Manager References")]
     public RoundManager roundManager;
 
-    // YENİDEN EKLENMESİ GEREKEN UI REFERANSLARI
     [Header("UI References")]
     public HealthBarUI player1HealthBarUI;
     public HealthBarUI player2HealthBarUI;
@@ -19,11 +18,9 @@ public class FightSceneManager : MonoBehaviour
             return;
         }
 
-        // 1. Haritayı Yarat
         GameObject mapInstance = Instantiate(GameManager.instance.selectedMapPrefab, Vector3.zero, Quaternion.identity);
         mapInstance.name = GameManager.instance.selectedMapPrefab.name + " (Instance)";
 
-        // 2. Spawn Noktalarını Bul
         Transform p1Spawn = mapInstance.transform.Find("Player1_SpawnPoint");
         Transform p2Spawn = mapInstance.transform.Find("Player2_SpawnPoint");
         if (p1Spawn == null || p2Spawn == null)
@@ -32,7 +29,6 @@ public class FightSceneManager : MonoBehaviour
             return;
         }
 
-        // 3. Karakterleri Yarat
         GameObject p1Object = Instantiate(GameManager.instance.player1Prefab, p1Spawn.position, Quaternion.identity);
         GameObject p2Object = Instantiate(GameManager.instance.player2Prefab, p2Spawn.position, Quaternion.identity);
         
@@ -42,20 +38,15 @@ public class FightSceneManager : MonoBehaviour
         FighterController p1Controller = p1Object.GetComponent<FighterController>();
         FighterController p2Controller = p2Object.GetComponent<FighterController>();
 
-        // YENİ EKLENEN KISIM: PlayerInputHandler referanslarını al
         PlayerInputHandler p1Input = p1Object.GetComponent<PlayerInputHandler>();
         PlayerInputHandler p2Input = p2Object.GetComponent<PlayerInputHandler>();
         
-        // 4. BAĞLANTILARI KUR
         p1Controller.SetOpponent(p2Object.transform);
         p2Controller.SetOpponent(p1Object.transform);
 
-        // YENİ EKLENEN SATIRLAR: Karakterlere kim olduklarını söyle!
         p1Input.InitializeForPlayer(PlayerInputHandler.PlayerIndex.Player1);
         p2Input.InitializeForPlayer(PlayerInputHandler.PlayerIndex.Player2);
 
-        // --- İŞTE EKLENMESİ GEREKEN EKSİK KOD BURASI ---
-        // HealthBar UI'larına hangi dövüşçüyü takip edeceklerini söylüyoruz
         if (player1HealthBarUI != null)
         {
             player1HealthBarUI.Initialize(p1Controller);
@@ -64,7 +55,6 @@ public class FightSceneManager : MonoBehaviour
         {
             player2HealthBarUI.Initialize(p2Controller);
         }
-        // ---------------------------------------------
         
         if (roundManager != null)
         {
