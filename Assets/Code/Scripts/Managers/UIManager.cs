@@ -20,6 +20,12 @@ public class UIManager : MonoBehaviour
     
     void Start()
     {
+        // Enable UI controls for main menu
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableUIControls();
+        }
+        
         EventSystem.current.SetSelectedGameObject(mainMenuFirstButton);
     }
 

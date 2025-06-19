@@ -11,6 +11,7 @@ public class SelectableCharacter
     public Sprite characterIcon;
     public GameObject characterPrefab;
 }
+
 public class CharacterSelectManager : MonoBehaviour
 {
     private enum SelectionState { P1_Choosing, P2_Choosing, SelectionComplete }
@@ -25,11 +26,20 @@ public class CharacterSelectManager : MonoBehaviour
     public RectTransform p2Frame;
     public TMP_Text instructionText;
 
+    [Header("Navigation Settings")]
+    [SerializeField] private int gridColumns = 4;
+
     private int p1_currentIndex = 0;
     private int p2_currentIndex = 1;
+    
+    // Add debouncing for navigation input
+    private float navigationCooldown = 0.2f;
+    private float lastNavigationTime = 0f;
 
     IEnumerator Start()
     {
+        Debug.Log("CharacterSelectManager: Start called");
+        
         for (int i = 0; i < characterList.Count; i++)
         {
             if (i < characterIconImages.Count)
@@ -44,25 +54,79 @@ public class CharacterSelectManager : MonoBehaviour
         instructionText.text = "PLAYER 1: CHOOSE YOUR MAID";
         p2Frame.gameObject.SetActive(false);
         UpdateFramePosition(1, p1_currentIndex);
+        
+        // Check if InputManager exists
+        if (InputManager.Instance == null)
+        {
+            Debug.LogError("CharacterSelectManager: InputManager.Instance is null!");
+            // Fall back to old input system for now
+            yield break;
+        }
+        
+        Debug.Log("CharacterSelectManager: InputManager found, enabling UI controls");
+        
+        // Enable UI controls for menu navigation
+        InputManager.Instance.EnableUIControls();
+        
+        // Subscribe to input events
+        SubscribeToInputEvents();
+        
+        Debug.Log("CharacterSelectManager: Setup complete");
     }
 
+    private void SubscribeToInputEvents()
+    {
+        Debug.Log("CharacterSelectManager: Subscribing to input events");
+        
+        // Subscribe to UI navigation for both players
+        InputManager.OnUINavigate += HandleNavigation;
+        InputManager.OnUISubmit += HandleSubmit;
+        
+        // Also subscribe to individual player inputs for selection
+        InputManager.OnPlayer1Punch += HandlePlayer1Selection;
+        InputManager.OnPlayer2Punch += HandlePlayer2Selection;
+        
+        Debug.Log("CharacterSelectManager: Input events subscribed");
+    }
+
+    private void UnsubscribeFromInputEvents()
+    {
+        Debug.Log("CharacterSelectManager: Unsubscribing from input events");
+        
+        InputManager.OnUINavigate -= HandleNavigation;
+        InputManager.OnUISubmit -= HandleSubmit;
+        InputManager.OnPlayer1Punch -= HandlePlayer1Selection;
+        InputManager.OnPlayer2Punch -= HandlePlayer2Selection;
+    }
+
+    // Add Update method to handle old input as fallback
     void Update()
     {
         if (currentState == SelectionState.SelectionComplete) return;
 
-        if (currentState == SelectionState.P1_Choosing)
+        // Fallback to old input system if InputManager is not available
+        if (InputManager.Instance == null)
         {
-            HandleNavigation(ref p1_currentIndex, 1);
-            HandleSelection(1);
-        }
-        else
-        {
-            HandleNavigation(ref p2_currentIndex, 2);
-            HandleSelection(2);
+            HandleOldInputSystem();
+            return;
         }
     }
 
-    void HandleNavigation(ref int currentIndex, int playerIndex)
+    private void HandleOldInputSystem()
+    {
+        if (currentState == SelectionState.P1_Choosing)
+        {
+            HandleNavigationOld(ref p1_currentIndex, 1);
+            HandleSelectionOld(1);
+        }
+        else
+        {
+            HandleNavigationOld(ref p2_currentIndex, 2);
+            HandleSelectionOld(2);
+        }
+    }
+
+    void HandleNavigationOld(ref int currentIndex, int playerIndex)
     {
         KeyCode up = (playerIndex == 1) ? KeyCode.W : KeyCode.UpArrow;
         KeyCode down = (playerIndex == 1) ? KeyCode.S : KeyCode.DownArrow;
@@ -89,13 +153,7 @@ public class CharacterSelectManager : MonoBehaviour
         }
     }
 
-    void UpdateFramePosition(int playerIndex, int characterIndex)
-    {
-        RectTransform targetFrame = (playerIndex == 1) ? p1Frame : p2Frame;
-        targetFrame.position = characterIconImages[characterIndex].rectTransform.position;
-    }
-
-    void HandleSelection(int playerIndex)
+    void HandleSelectionOld(int playerIndex)
     {
         KeyCode selectKey = (playerIndex == 1) ? KeyCode.J : KeyCode.Keypad1;
 
@@ -105,8 +163,113 @@ public class CharacterSelectManager : MonoBehaviour
         }
     }
 
+    private void HandleNavigation(Vector2 navigation)
+    {
+        Debug.Log($"CharacterSelectManager: HandleNavigation called with {navigation}");
+        
+        if (currentState == SelectionState.SelectionComplete) return;
+
+        // Add debouncing to prevent rapid navigation
+        if (Time.time < lastNavigationTime + navigationCooldown) return;
+
+        if (currentState == SelectionState.P1_Choosing)
+        {
+            if (HandlePlayerNavigation(ref p1_currentIndex, navigation))
+            {
+                UpdateFramePosition(1, p1_currentIndex);
+                lastNavigationTime = Time.time;
+            }
+        }
+        else if (currentState == SelectionState.P2_Choosing)
+        {
+            if (HandlePlayerNavigation(ref p2_currentIndex, navigation))
+            {
+                UpdateFramePosition(2, p2_currentIndex);
+                lastNavigationTime = Time.time;
+            }
+        }
+    }
+
+    private bool HandlePlayerNavigation(ref int currentIndex, Vector2 navigation)
+    {
+        int prevIndex = currentIndex;
+        
+        // Use higher threshold to avoid accidental diagonal movement
+        float threshold = 0.7f;
+
+        // For 4 columns, 1 row - only handle left/right navigation
+        if (navigation.x < -threshold) // Left
+        {
+            currentIndex--;
+            if (currentIndex < 0) currentIndex = characterList.Count - 1; // Wrap to end
+        }
+        else if (navigation.x > threshold) // Right
+        {
+            currentIndex++;
+            if (currentIndex >= characterList.Count) currentIndex = 0; // Wrap to beginning
+        }
+        else
+        {
+            return false; // No significant navigation input
+        }
+
+        if (prevIndex != currentIndex)
+        {
+            Debug.Log($"CharacterSelectManager: Index changed from {prevIndex} to {currentIndex}");
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX("ButtonSelect");
+            }
+            return true;
+        }
+        
+        return false;
+    }
+
+    private void UpdateFramePosition(int playerIndex, int characterIndex)
+    {
+        RectTransform targetFrame = (playerIndex == 1) ? p1Frame : p2Frame;
+        targetFrame.position = characterIconImages[characterIndex].rectTransform.position;
+    }
+
+    private void HandleSubmit()
+    {
+        Debug.Log("CharacterSelectManager: HandleSubmit called");
+        
+        if (currentState == SelectionState.P1_Choosing)
+        {
+            SelectCharacter(1, p1_currentIndex);
+        }
+        else if (currentState == SelectionState.P2_Choosing)
+        {
+            SelectCharacter(2, p2_currentIndex);
+        }
+    }
+
+    private void HandlePlayer1Selection()
+    {
+        Debug.Log("CharacterSelectManager: HandlePlayer1Selection called");
+        
+        if (currentState == SelectionState.P1_Choosing)
+        {
+            SelectCharacter(1, p1_currentIndex);
+        }
+    }
+
+    private void HandlePlayer2Selection()
+    {
+        Debug.Log("CharacterSelectManager: HandlePlayer2Selection called");
+        
+        if (currentState == SelectionState.P2_Choosing)
+        {
+            SelectCharacter(2, p2_currentIndex);
+        }
+    }
+
     void SelectCharacter(int playerIndex, int characterIndex)
     {
+        Debug.Log($"CharacterSelectManager: SelectCharacter called - Player {playerIndex}, Character {characterIndex}");
+        
         if (GameManager.instance == null)
         {
             Debug.LogError("GameManager not found!");
@@ -143,5 +306,10 @@ public class CharacterSelectManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("MapSelectScene"); 
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromInputEvents();
     }
 }

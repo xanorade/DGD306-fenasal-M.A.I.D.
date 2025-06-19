@@ -12,6 +12,7 @@ public class SelectableMap
     public Sprite mapIcon;
     public GameObject mapPrefab;
 }
+
 public class MapSelectManager : MonoBehaviour
 {
     [Header("Map List")]
@@ -23,6 +24,10 @@ public class MapSelectManager : MonoBehaviour
     public TMP_Text mapNameText;
 
     private int currentIndex = 0;
+    
+    // Add debouncing for navigation input
+    private float navigationCooldown = 0.2f;
+    private float lastNavigationTime = 0f;
 
     IEnumerator Start()
     {
@@ -37,34 +42,73 @@ public class MapSelectManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         UpdateSelection(0);
-    }
-
-    void Update()
-    {
-        HandleNavigation();
-        HandleSelection();
-    }
-
-    void HandleNavigation()
-    {
-        int prevIndex = currentIndex;
-
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        
+        // Disable EventSystem UI input module to prevent conflicts
+        var inputModule = FindObjectOfType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+        if (inputModule != null)
         {
-            currentIndex--;
-        }
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            currentIndex++;
+            inputModule.enabled = false;
         }
         
+        // Enable UI controls for menu navigation
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.EnableUIControls();
+        }
+        
+        // Subscribe to input events
+        SubscribeToInputEvents();
+    }
+
+    private void SubscribeToInputEvents()
+    {
+        InputManager.OnUINavigate += HandleNavigation;
+        InputManager.OnUISubmit += HandleSelection;
+    }
+
+    private void UnsubscribeFromInputEvents()
+    {
+        InputManager.OnUINavigate -= HandleNavigation;
+        InputManager.OnUISubmit -= HandleSelection;
+    }
+
+    private void HandleNavigation(Vector2 navigation)
+    {
+        // Add debouncing to prevent rapid repeated inputs
+        if (Time.time < lastNavigationTime + navigationCooldown)
+        {
+            return;
+        }
+        
+        int prevIndex = currentIndex;
+
+        if (navigation.x < -0.5f) // Left
+        {
+            currentIndex--;
+            lastNavigationTime = Time.time;
+        }
+        else if (navigation.x > 0.5f) // Right
+        {
+            currentIndex++;
+            lastNavigationTime = Time.time;
+        }
+        else
+        {
+            return;
+        }
+        
+        // Handle wrapping
+        if (currentIndex < 0) currentIndex = mapList.Count - 1;
+        if (currentIndex >= mapList.Count) currentIndex = 0;
+        
+        // Update if index changed
         if (prevIndex != currentIndex)
         {
-            if (currentIndex < 0) currentIndex = mapList.Count - 1;
-            if (currentIndex >= mapList.Count) currentIndex = 0;
-            
             UpdateSelection(currentIndex);
-            AudioManager.instance.PlaySFX("ButtonSelect");
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX("ButtonSelect");
+            }
         }
     }
 
@@ -75,15 +119,7 @@ public class MapSelectManager : MonoBehaviour
         mapNameText.text = mapList[currentIndex].mapName;
     }
 
-    void HandleSelection()
-    {
-        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Keypad1) || Input.GetKeyDown(KeyCode.Return))
-        {
-            SelectMapAndStartFight();
-        }
-    }
-
-    void SelectMapAndStartFight()
+    private void HandleSelection()
     {
         if (GameManager.instance == null)
         {
@@ -93,10 +129,23 @@ public class MapSelectManager : MonoBehaviour
 
         GameManager.instance.selectedMapPrefab = mapList[currentIndex].mapPrefab;
 
-        Debug.Log("MAP SELECT SCENE: GameManager'a atanan prefab: " + (GameManager.instance.selectedMapPrefab != null ? GameManager.instance.selectedMapPrefab.name : "NULL"));
-        Debug.Log("MAP SELECT SCENE: GameManager instance ID: " + GameManager.instance.GetInstanceID());
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("ButtonClick");
+        }
 
-        AudioManager.instance.PlaySFX("ButtonClick");
         SceneManager.LoadScene("FightScene");
+    }
+
+    private void OnDestroy()
+    {
+        UnsubscribeFromInputEvents();
+        
+        // Re-enable EventSystem UI input module when leaving
+        var inputModule = FindObjectOfType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+        if (inputModule != null)
+        {
+            inputModule.enabled = true;
+        }
     }
 }
