@@ -57,7 +57,29 @@
                 {
                     "name": "",
                     "id": "875c29c2-1df9-4f8f-8771-d76bf3994513",
-                    "path": "<Joystick1>/hat",
+                    "path": "<Joystick>/hat",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick2",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "875c29c2-1df9-4f8f-8771-d76bf3994514",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick1",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "875c29c2-1df9-4f8f-8771-d76bf3994515",
+                    "path": "<Joystick>/stick",
                     "interactions": "",
                     "processors": "",
                     "groups": "Joystick2",

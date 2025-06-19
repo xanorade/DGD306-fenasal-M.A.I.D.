@@ -26,8 +26,15 @@ public class CharacterSelectManager : MonoBehaviour
     public RectTransform p2Frame;
     public TMP_Text instructionText;
 
+    [Header("Navigation Settings")]
+    [SerializeField] private int gridColumns = 4;
+
     private int p1_currentIndex = 0;
     private int p2_currentIndex = 1;
+    
+    // Add debouncing for navigation input
+    private float navigationCooldown = 0.2f;
+    private float lastNavigationTime = 0f;
 
     IEnumerator Start()
     {
@@ -162,31 +169,49 @@ public class CharacterSelectManager : MonoBehaviour
         
         if (currentState == SelectionState.SelectionComplete) return;
 
+        // Add debouncing to prevent rapid navigation
+        if (Time.time < lastNavigationTime + navigationCooldown) return;
+
         if (currentState == SelectionState.P1_Choosing)
         {
-            HandlePlayerNavigation(ref p1_currentIndex, navigation);
-            UpdateFramePosition(1, p1_currentIndex);
+            if (HandlePlayerNavigation(ref p1_currentIndex, navigation))
+            {
+                UpdateFramePosition(1, p1_currentIndex);
+                lastNavigationTime = Time.time;
+            }
         }
         else if (currentState == SelectionState.P2_Choosing)
         {
-            HandlePlayerNavigation(ref p2_currentIndex, navigation);
-            UpdateFramePosition(2, p2_currentIndex);
+            if (HandlePlayerNavigation(ref p2_currentIndex, navigation))
+            {
+                UpdateFramePosition(2, p2_currentIndex);
+                lastNavigationTime = Time.time;
+            }
         }
     }
 
-    private void HandlePlayerNavigation(ref int currentIndex, Vector2 navigation)
+    private bool HandlePlayerNavigation(ref int currentIndex, Vector2 navigation)
     {
         int prevIndex = currentIndex;
-
-        // Convert navigation vector to grid movement
-        if (navigation.y > 0.5f) currentIndex -= 2; // Up
-        if (navigation.y < -0.5f) currentIndex += 2; // Down
-        if (navigation.x < -0.5f) currentIndex--; // Left
-        if (navigation.x > 0.5f) currentIndex++; // Right
         
-        // Handle wrapping
-        if (currentIndex < 0) currentIndex = characterList.Count + currentIndex;
-        if (currentIndex >= characterList.Count) currentIndex = currentIndex % characterList.Count;
+        // Use higher threshold to avoid accidental diagonal movement
+        float threshold = 0.7f;
+
+        // For 4 columns, 1 row - only handle left/right navigation
+        if (navigation.x < -threshold) // Left
+        {
+            currentIndex--;
+            if (currentIndex < 0) currentIndex = characterList.Count - 1; // Wrap to end
+        }
+        else if (navigation.x > threshold) // Right
+        {
+            currentIndex++;
+            if (currentIndex >= characterList.Count) currentIndex = 0; // Wrap to beginning
+        }
+        else
+        {
+            return false; // No significant navigation input
+        }
 
         if (prevIndex != currentIndex)
         {
@@ -195,7 +220,10 @@ public class CharacterSelectManager : MonoBehaviour
             {
                 AudioManager.instance.PlaySFX("ButtonSelect");
             }
+            return true;
         }
+        
+        return false;
     }
 
     private void UpdateFramePosition(int playerIndex, int characterIndex)

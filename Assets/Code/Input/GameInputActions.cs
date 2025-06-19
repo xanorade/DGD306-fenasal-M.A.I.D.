@@ -79,7 +79,29 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""875c29c2-1df9-4f8f-8771-d76bf3994513"",
-                    ""path"": ""<Joystick1>/hat"",
+                    ""path"": ""<Joystick>/hat"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick2"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""875c29c2-1df9-4f8f-8771-d76bf3994514"",
+                    ""path"": ""<Joystick>/stick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Joystick1"",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""875c29c2-1df9-4f8f-8771-d76bf3994515"",
+                    ""path"": ""<Joystick>/stick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick2"",
@@ -286,7 +308,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Special"",
                     ""type"": ""Button"",
-                    ""id"": ""310952d0-c692-4150-9e7b-02f61e1c2c02"",
+                    ""id"": ""7f36978d-3f84-40a5-afa8-8889a38010f3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
