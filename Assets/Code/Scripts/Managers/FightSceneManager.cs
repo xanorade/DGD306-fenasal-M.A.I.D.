@@ -35,14 +35,24 @@ public class FightSceneManager : MonoBehaviour
         // 3. Karakterleri Yarat
         GameObject p1Object = Instantiate(GameManager.instance.player1Prefab, p1Spawn.position, Quaternion.identity);
         GameObject p2Object = Instantiate(GameManager.instance.player2Prefab, p2Spawn.position, Quaternion.identity);
+        
         p1Object.name = "Player1";
         p2Object.name = "Player2";
+
         FighterController p1Controller = p1Object.GetComponent<FighterController>();
         FighterController p2Controller = p2Object.GetComponent<FighterController>();
+
+        // YENİ EKLENEN KISIM: PlayerInputHandler referanslarını al
+        PlayerInputHandler p1Input = p1Object.GetComponent<PlayerInputHandler>();
+        PlayerInputHandler p2Input = p2Object.GetComponent<PlayerInputHandler>();
         
-        // 4. Rakip ve UI Bağlantılarını Kur
+        // 4. BAĞLANTILARI KUR
         p1Controller.SetOpponent(p2Object.transform);
         p2Controller.SetOpponent(p1Object.transform);
+
+        // YENİ EKLENEN SATIRLAR: Karakterlere kim olduklarını söyle!
+        p1Input.InitializeForPlayer(PlayerInputHandler.PlayerIndex.Player1);
+        p2Input.InitializeForPlayer(PlayerInputHandler.PlayerIndex.Player2);
 
         // --- İŞTE EKLENMESİ GEREKEN EKSİK KOD BURASI ---
         // HealthBar UI'larına hangi dövüşçüyü takip edeceklerini söylüyoruz

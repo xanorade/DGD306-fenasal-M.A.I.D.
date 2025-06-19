@@ -46,6 +46,11 @@ namespace DGD306.Character
                 enabled = false;
             }
         }
+        
+        public void InitializeForPlayer(PlayerIndex index)
+        {
+            playerIndex = index;
+        }
 
         private void Update()
         {

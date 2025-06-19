@@ -20,27 +20,36 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
+    [Header("Sound Lists")]
     public Sound[] musicTracks;
     public Sound[] sfxSounds;
     public Sound[] uiSounds;
     
     private AudioSource currentMusicSource;
 
+    // YENİ EKLENEN SATIR: CharacterAudio gibi dış scriptlerden gelen klipleri çalmak için genel bir kaynak
+    private AudioSource sfxSource;
+
     void Awake()
     {
-
         #region Singleton
         if (instance == null)
         {
             instance = this;
-
             DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (instance != this)
         {
             Destroy(gameObject);
+            return;
         }
         #endregion
+
+        // YENİ EKLENEN SATIR: Genel SFX kaynağını oluştur ve ayarla
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        // İsterseniz tüm SFX'lerin çıkacağı varsayılan bir mixer grubu atayabilirsiniz
+        // sfxSource.outputAudioMixerGroup = ... ; 
 
         InitializeSounds(musicTracks);
         InitializeSounds(sfxSounds);
@@ -54,6 +63,7 @@ public class AudioManager : MonoBehaviour
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             s.source.volume = s.volume;
+            s.source.pitch = 1f; // Pitch'i kaldırmıştık, varsayılan olarak 1 ayarlayalım
             s.source.loop = s.loop;
             s.source.outputAudioMixerGroup = s.output;
             s.source.playOnAwake = false;
@@ -62,7 +72,8 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        PlayMusic("MainMenuMusic");
+        // Başlangıçta çalacak bir müziğiniz olduğundan emin olun, yoksa bu satır hata verebilir
+         PlayMusic("MainMenuMusic");
     }
 
     public void PlayMusic(string name)
@@ -70,7 +81,7 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(musicTracks, sound => sound.name == name);
         if (s == null)
         {
-            Debug.LogWarning("AudioManager: Could not find" + name );
+            Debug.LogWarning("AudioManager: Could not find music track: " + name);
             return;
         }
 
@@ -95,29 +106,47 @@ public class AudioManager : MonoBehaviour
     {
         float startVolume = musicSource.volume;
         float timer = 0f;
-
         while (timer < fadeTime)
         {
             timer += Time.deltaTime;
             musicSource.volume = Mathf.Lerp(startVolume, 0f, timer / fadeTime);
             yield return null;
         }
-
         musicSource.Stop();
         musicSource.volume = startVolume;
     }
 
+    // DÜZELTİLMİŞ FONKSİYON: İsme göre SFX çalar
     public void PlaySFX(string name)
     {
+        // Hem sfxSounds hem de uiSounds dizilerinde arama yap
         Sound s = Array.Find(sfxSounds, sound => sound.name == name);
-        if (s == null) s = Array.Find(uiSounds, sound => sound.name == name);
+        if (s == null)
+        {
+            s = Array.Find(uiSounds, sound => sound.name == name);
+        }
         
         if (s == null)
         {
-            Debug.LogWarning("AudioManager: Could not find" + name);
+            Debug.LogWarning("AudioManager: SFX sound not found in lists: " + name);
             return;
         }
         
+        // Bu sese özel olarak oluşturulmuş AudioSource'u kullan ve PlayOneShot ile çal
         s.source.PlayOneShot(s.source.clip);
+    }
+    
+    // DÜZELTİLMİŞ FONKSİYON: Dışarıdan gelen AudioClip'i çalar
+    public void PlaySFX(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            // Bu tür genel sesler için oluşturduğumuz sfxSource'u kullan
+            sfxSource.PlayOneShot(clip);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager: Attempted to play a null audio clip!");
+        }
     }
 }

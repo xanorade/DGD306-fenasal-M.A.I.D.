@@ -93,6 +93,7 @@ public class FighterController : MonoBehaviour
     // Components
     private Animator animator;
     private HurtboxController hurtboxController;
+    private CharacterAudio characterAudio;
     
     // Health and damage tracking
     private string lastAttackTaken = "";
@@ -118,6 +119,7 @@ public class FighterController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         hurtboxController = GetComponent<HurtboxController>();
+        characterAudio = GetComponent<CharacterAudio>();
         
         stateMachine = new FighterStateMachine(this);
         inputBuffer = new InputBuffer();
@@ -574,6 +576,7 @@ public class FighterController : MonoBehaviour
         inputBuffer.AddInput(new InputCommand(InputType.Punch));
         
         if (!IsInAttackState()) {
+            if (characterAudio != null) characterAudio.PlayPunchSound();
             // Clear any movement velocity immediately for responsive attacks
             rb.velocity = new Vector2(0f, rb.velocity.y);
             
@@ -593,6 +596,7 @@ public class FighterController : MonoBehaviour
         inputBuffer.AddInput(new InputCommand(InputType.Kick));
         
         if (!IsInAttackState()) {
+            if (characterAudio != null) characterAudio.PlayKickSound();
             // Stop horizontal movement for any attack
             rb.velocity = new Vector2(0f, rb.velocity.y);
                 
@@ -888,6 +892,7 @@ public class FighterController : MonoBehaviour
     private void OnHitTaken(float damage, Transform attacker, string attackType)
     {
         if (!IsAlive) return; // Don't take damage if already dead
+        if (characterAudio != null) characterAudio.PlayTakeDamageSound();
         
         // Store hit information for debug display
         lastDamageTaken = damage;
@@ -924,6 +929,7 @@ public class FighterController : MonoBehaviour
     private void OnDeath()
     {
         Debug.Log($"{gameObject.name} has been defeated!");
+        if (characterAudio != null) characterAudio.PlayDeathSound();
         
         // Stop all movement
         rb.velocity = Vector2.zero;
@@ -961,6 +967,7 @@ public class FighterController : MonoBehaviour
     public void TriggerWin()
     {
         if (stateMachine.CurrentStateType == typeof(WinState)) return; // Already in win state
+        if (characterAudio != null) characterAudio.PlayWinSound();
         
         Debug.Log($"{gameObject.name} has won the match!");
         
@@ -998,22 +1005,20 @@ public class FighterController : MonoBehaviour
         lastAttackTaken = "";
         lastDamageTaken = 0f;
         lastAttacker = null;
-        enabled = true; // Re-enable if was disabled due to death
+        enabled = true; // Karakterin script'inin tekrar aktif olmasını sağlar
         
-        // Reset from win state if necessary
-        if (stateMachine.CurrentStateType == typeof(WinState))
+        if (stateMachine != null)
         {
-            stateMachine.ChangeState(new IdleState());
+            if (stateMachine.CurrentStateType == typeof(WinState) || 
+                stateMachine.CurrentStateType == typeof(DeathState))
+            {
+                stateMachine.ChangeState(new IdleState());
+            }
         }
-        
-        // Reset from death state if necessary
-        if (stateMachine.CurrentStateType == typeof(DeathState))
-        {
-            stateMachine.ChangeState(new IdleState());
-        }
-        
-        UpdateStateText(currentStateName);
-        
+        // --- KODUN SONU ---
+
+        UpdateStateText("Idle");
+    
         Debug.Log($"{gameObject.name} health reset to {maxHealth:F1}");
     }
     
