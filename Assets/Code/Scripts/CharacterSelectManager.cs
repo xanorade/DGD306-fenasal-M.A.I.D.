@@ -305,6 +305,10 @@ public class CharacterSelectManager : MonoBehaviour
     private IEnumerator StartFightCoroutine()
     {
         yield return new WaitForSeconds(2f);
+        
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("MapSelectScene"); 
     }
 

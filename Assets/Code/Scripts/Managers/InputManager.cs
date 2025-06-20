@@ -414,21 +414,93 @@ public class InputManager : MonoBehaviour
         OnPause?.Invoke();
     }
     
+    /// <summary>
+    /// Clears all static event subscriptions to prevent MissingReferenceException 
+    /// when fighters are destroyed and recreated between matches
+    /// </summary>
+    public static void ClearAllEventSubscriptions()
+    {
+        Debug.Log("InputManager: Clearing all event subscriptions");
+        
+        // Clear UI events
+        OnUINavigate = null;
+        OnUISubmit = null;
+        OnUICancel = null;
+        
+        // Clear Player 1 events
+        OnPlayer1Move = null;
+        OnPlayer1Punch = null;
+        OnPlayer1Kick = null;
+        OnPlayer1Special = null;
+        OnPlayer1Jump = null;
+        
+        // Clear Player 2 events
+        OnPlayer2Move = null;
+        OnPlayer2Punch = null;
+        OnPlayer2Kick = null;
+        OnPlayer2Special = null;
+        OnPlayer2Jump = null;
+        
+        // Clear Pause events
+        OnPause = null;
+        
+        Debug.Log("InputManager: All event subscriptions cleared");
+    }
+    
     private void OnEnable()
     {
         Debug.Log("InputManager: OnEnable called");
-        inputActions?.Enable();
+        // Don't blindly enable all actions - this overrides our specific control state
+        // Instead, let the current state determine what should be enabled
+        // If no specific state has been set, default to UI controls
+        if (inputActions != null)
+        {
+            // Check if any action maps are already enabled to preserve state
+            bool hasEnabledMaps = (uiActionMap?.enabled == true) || 
+                                 (player1ActionMap?.enabled == true) || 
+                                 (player2ActionMap?.enabled == true);
+            
+            if (!hasEnabledMaps)
+            {
+                // No maps enabled, default to UI controls
+                EnableUIControls();
+            }
+            // If maps are already enabled, preserve the current state
+        }
     }
     
     private void OnDisable()
     {
         Debug.Log("InputManager: OnDisable called");
-        inputActions?.Disable();
+        
+        // Only disable input actions if this is the current active instance
+        // Don't disable if this is a duplicate being destroyed
+        if (Instance == this)
+        {
+            Debug.Log("InputManager: Disabling input actions on OnDisable as this is the active instance");
+            inputActions?.Disable();
+        }
+        else
+        {
+            Debug.Log("InputManager: Not disabling input actions on OnDisable as this is a duplicate instance");
+        }
     }
     
     private void OnDestroy()
     {
         Debug.Log("InputManager: OnDestroy called");
-        inputActions?.Disable();
+        
+        // Only disable input actions if this is the current active instance
+        // Don't disable if this is a duplicate being destroyed
+        if (Instance == this)
+        {
+            Debug.Log("InputManager: Disabling input actions as this is the active instance");
+            inputActions?.Disable();
+            Instance = null; // Clear the instance reference
+        }
+        else
+        {
+            Debug.Log("InputManager: Not disabling input actions as this is a duplicate instance");
+        }
     }
 }

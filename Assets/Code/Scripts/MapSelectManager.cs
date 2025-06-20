@@ -1,4 +1,4 @@
-using UnityEngine;
+usng UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
@@ -133,6 +133,9 @@ public class MapSelectManager : MonoBehaviour
         {
             AudioManager.instance.PlaySFX("ButtonClick");
         }
+
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
 
         SceneManager.LoadScene("FightScene");
     }

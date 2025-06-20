@@ -40,11 +40,17 @@ public class UIManager : MonoBehaviour
 
     public void SelectOnePlayerMode()
     {
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("LevelSelect_Scene");
     }
 
     public void SelectTwoPlayerMode()
     {
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("CharacterSelectScene"); 
     }
 

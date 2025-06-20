@@ -217,24 +217,28 @@ public class RoundManager : MonoBehaviour
     void HandleMatchOver(int winnerPlayerIndex)
     {
         Debug.Log("MATCH OVER!");
-        winnerText.text = "PLAYER " + winnerPlayerIndex + " WINS";
-        gameOverPanel.SetActive(true);
+        Debug.Log("PLAYER " + winnerPlayerIndex + " WINS - Going to main menu");
         
-        // Enable game over UI state and UI controls
-        isGameOverUIActive = true;
-        gameOverButtonIndex = 0; // Start with Rematch button selected
+        // Skip the game over UI and go directly to main menu after a short delay
+        StartCoroutine(GoToMainMenuAfterDelay());
+    }
+    
+    private IEnumerator GoToMainMenuAfterDelay()
+    {
+        // Wait a short moment to let players see the victory animation
+        yield return new WaitForSeconds(1f);
         
-        // Enable UI controls for the new input system
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
+        // Ensure input system is properly reset for UI navigation
         if (InputManager.Instance != null)
         {
             InputManager.Instance.EnableUIControls();
         }
-
-        // Still keep EventSystem selection as fallback
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(rematchButton);
         
-        UpdateGameOverButtonHighlight();
+        // Go directly to main menu
+        SceneManager.LoadScene("TitleScene");
     }
 
     private void HandleGameOverNavigation(Vector2 navigation)
@@ -331,12 +335,20 @@ public class RoundManager : MonoBehaviour
     public void Rematch()
     {
         isGameOverUIActive = false;
+        
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("CharacterSelectScene");
     }
 
     public void QuitToTitle()
     {
         isGameOverUIActive = false;
+        
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("TitleScene");
     }
 

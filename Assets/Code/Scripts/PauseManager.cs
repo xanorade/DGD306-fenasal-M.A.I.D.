@@ -76,6 +76,9 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
         IsGamePaused = false;
         
+        // Clear all input event subscriptions before changing scenes
+        InputManager.ClearAllEventSubscriptions();
+        
         SceneManager.LoadScene("TitleScene"); 
     }
 
