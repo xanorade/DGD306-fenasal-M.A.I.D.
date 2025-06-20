@@ -463,6 +463,14 @@ public class FighterController : MonoBehaviour
     
     // Process move input from any source
     private void ProcessMoveInput(Vector2 newMoveInput) {
+        // Don't allow movement if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) {
+            moveInput = Vector2.zero;
+            isCrouching = false;
+            isBlocking = false;
+            return;
+        }
+        
         // Check for direction change
         if (Mathf.Sign(newMoveInput.x) != Mathf.Sign(lastMoveInputX) && 
             Mathf.Abs(newMoveInput.x) > 0.1f && Mathf.Abs(lastMoveInputX) > 0.1f) 
@@ -550,6 +558,9 @@ public class FighterController : MonoBehaviour
     
     public void OnJump()
     {
+        // Don't allow jumping if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) return;
+        
         if (isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
@@ -575,6 +586,9 @@ public class FighterController : MonoBehaviour
     public void OnPunch(){
         inputBuffer.AddInput(new InputCommand(InputType.Punch));
         
+        // Don't allow attacks if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) return;
+        
         if (!IsInAttackState()) {
             if (characterAudio != null) characterAudio.PlayPunchSound();
             // Clear any movement velocity immediately for responsive attacks
@@ -595,6 +609,9 @@ public class FighterController : MonoBehaviour
     public void OnKick(){
         inputBuffer.AddInput(new InputCommand(InputType.Kick));
         
+        // Don't allow attacks if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) return;
+        
         if (!IsInAttackState()) {
             if (characterAudio != null) characterAudio.PlayKickSound();
             // Stop horizontal movement for any attack
@@ -612,6 +629,9 @@ public class FighterController : MonoBehaviour
     public void OnSpecial(){
         inputBuffer.AddInput(new InputCommand(InputType.Special));
         
+        // Don't allow attacks if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) return;
+        
         if (!IsInAttackState() && specialBarCurrent >= specialBarMax){
             // Stop horizontal movement for any attack
             rb.velocity = new Vector2(0f, rb.velocity.y);
@@ -623,6 +643,9 @@ public class FighterController : MonoBehaviour
     
     // Exposed method for dashing that can be called by PlayerInputHandler
     public void TryDash(Vector2 direction) {
+        // Don't allow dashing if dead, defeated, or in win state
+        if (!IsAlive || IsDead || HasWon) return;
+        
         // Can't dash while attacking or stunned
         if (!canDash || !stateMachine.CanMove() || IsInAttackState() || stateMachine.CurrentStateType == typeof(HitState))
             return;

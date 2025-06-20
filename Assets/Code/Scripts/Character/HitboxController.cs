@@ -187,6 +187,14 @@ namespace DGD306.Character
         {
             if (fighter == null) return;
             
+            // Don't process hitboxes if fighter is dead, defeated, or has won
+            if (!fighter.IsAlive || fighter.IsDead || fighter.HasWon) 
+            {
+                activeHitboxes.Clear();
+                currentHitTargets.Clear();
+                return;
+            }
+            
             string newState = fighter.CurrentStateName;
             
             // Check if state changed
