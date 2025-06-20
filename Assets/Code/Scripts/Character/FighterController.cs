@@ -1059,19 +1059,61 @@ public class FighterController : MonoBehaviour
         lastAttacker = null;
         enabled = true; // Karakterin script'inin tekrar aktif olmasını sağlar
         
-        if (stateMachine != null)
+        // Reset velocity to zero
+        if (rb != null)
         {
-            if (stateMachine.CurrentStateType == typeof(WinState) || 
-                stateMachine.CurrentStateType == typeof(DeathState))
-            {
-                stateMachine.ChangeState(new IdleState());
-            }
+            rb.velocity = Vector2.zero;
         }
-        // --- KODUN SONU ---
-
+        
+        // Reset state machine and animator
+        ResetStateAndAnimation();
+        
         UpdateStateText("Idle");
     
         Debug.Log($"{gameObject.name} health reset to {maxHealth:F1}");
+    }
+    
+    /// <summary>
+    /// Resets both the state machine and animator to idle state
+    /// </summary>
+    public void ResetStateAndAnimation()
+    {
+        if (stateMachine != null)
+        {
+            // Force transition to idle state regardless of current state
+            stateMachine.ChangeState(new IdleState());
+        }
+        
+        if (animator != null)
+        {
+            // Reset all animator triggers to prevent lingering states
+            animator.ResetTrigger("Death");
+            animator.ResetTrigger("Win");
+            animator.ResetTrigger("Hit");
+            animator.ResetTrigger("Punch");
+            animator.ResetTrigger("Kick");
+            animator.ResetTrigger("CrouchPunch");
+            animator.ResetTrigger("CrouchKick");
+            animator.ResetTrigger("Special");
+            animator.ResetTrigger("Dash");
+            animator.ResetTrigger("JumpStart");
+            animator.ResetTrigger("JumpLoop");
+            
+            // Reset all animator parameters to default state
+            animator.SetBool("IsGrounded", true);
+            animator.SetBool("IsCrouching", false);
+            animator.SetBool("IsBlocking", false);
+            animator.SetFloat("HorizontalSpeed", 0f);
+            
+            // Force animator to play idle animation immediately
+            animator.Play("Idle", 0, 0f);
+        }
+        
+        // Reset internal states
+        isCrouching = false;
+        isBlocking = false;
+        moveInput = Vector2.zero;
+        currentVelocity = Vector2.zero;
     }
     
     // Manual win trigger for testing

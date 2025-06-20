@@ -10,6 +10,11 @@ public class RoundManager : MonoBehaviour
     [Header("Round Settings")]
     public int totalRoundsToWin = 2;
     public float timeBetweenRounds = 5f;
+    
+    [Header("Spawn Settings")]
+    [Tooltip("If true, players will spawn slightly in the air to force jump animation and ensure clean state reset")]
+    public bool spawnPlayersInAir = true;
+    public float airSpawnHeight = 0.5f;
 
     [Header("References")]
     public RoundTimer roundTimer;
@@ -91,11 +96,29 @@ public class RoundManager : MonoBehaviour
         currentRound++;
         isRoundOver = false;
 
+        // Reset player health and state
         player1.ResetHealth();
         player2.ResetHealth();
-        player1.transform.position = p1StartPos.position;
-        player2.transform.position = p2StartPos.position;
+        
+        // Position players - optionally in the air for clean animation reset
+        Vector3 p1Pos = p1StartPos.position;
+        Vector3 p2Pos = p2StartPos.position;
+        
+        if (spawnPlayersInAir)
+        {
+            p1Pos.y += airSpawnHeight;
+            p2Pos.y += airSpawnHeight;
+            Debug.Log($"Spawning players in air at height +{airSpawnHeight} for clean animation reset");
+        }
+        
+        player1.transform.position = p1Pos;
+        player2.transform.position = p2Pos;
         player1.FlipCharacter(true);
+        
+        // Extra insurance: Force state reset after positioning
+        yield return new WaitForEndOfFrame(); // Wait one frame for physics to settle
+        player1.ResetStateAndAnimation();
+        player2.ResetStateAndAnimation();
 
         roundAnnouncerText.gameObject.SetActive(true);
         
