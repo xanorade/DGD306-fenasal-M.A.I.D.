@@ -54,8 +54,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ece163cf95c8d4f1cb3e060588954da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 16
-  jumpForce: 32
+  moveSpeed: 24
+  jumpForce: 48
   dashSpeed: 24
   dashDuration: 0.1
   dashCooldown: 0.5
@@ -64,9 +64,9 @@ MonoBehaviour:
   currentHealth: 100
   opponentTransform: {fileID: 0}
   currentStateName: Idle
-  showStateText: 1
+  showStateText: 0
   stateTextColor: {r: 1, g: 1, b: 1, a: 1}
-  showDirectionArrow: 1
+  showDirectionArrow: 0
   directionArrowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   playerIndex: 1
   isControlledExternally: 0
@@ -431,3 +431,4 @@ MonoBehaviour:
   kickSound: {fileID: 8300000, guid: 721f5ee33c3a0894f82c0638be3e2815, type: 3}
   takeDamageSound: {fileID: 8300000, guid: c2d88b858d4d261428335e4511b68115, type: 3}
   winSound: {fileID: 8300000, guid: 28c8f2c38214529499afc975ac8e8bba, type: 3}
+  deathSound: {fileID: 0}
