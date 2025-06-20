@@ -11,16 +11,18 @@ public class UIManager : MonoBehaviour
     public GameObject playerSelectPanel;
     public GameObject optionsPanel;
     public GameObject creditsPanel;
+    public GameObject instructionsPanel; // YENİ: Talimatlar paneli referansı
 
     [Header("First Buttons for Navigation")]
     public GameObject mainMenuFirstButton;
     public GameObject playerSelectFirstButton;
     public GameObject optionsPanelFirstButton;
     public GameObject creditsPanelFirstButton;
-    
+    public GameObject instructionsPanelFirstButton; // YENİ: Talimatlar panelinin ilk (ve tek) butonu
+    public GameObject instructionsButtonOnPlayerSelect; // YENİ: Player Select'teki Talimatlar butonu
+
     void Start()
     {
-        // Enable UI controls for main menu
         if (InputManager.Instance != null)
         {
             InputManager.Instance.EnableUIControls();
@@ -33,32 +35,25 @@ public class UIManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         playerSelectPanel.SetActive(true);
-
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(playerSelectFirstButton);
     }
 
-    public void SelectOnePlayerMode()
+    // YENİ FONKSİYON: Talimatlar butonuna basıldığında
+    public void InstructionsButtonClicked()
     {
-        // Clear all input event subscriptions before changing scenes
-        InputManager.ClearAllEventSubscriptions();
-        
-        SceneManager.LoadScene("LevelSelect_Scene");
-    }
-
-    public void SelectTwoPlayerMode()
-    {
-        // Clear all input event subscriptions before changing scenes
-        InputManager.ClearAllEventSubscriptions();
-        
-        SceneManager.LoadScene("CharacterSelectScene"); 
+        playerSelectPanel.SetActive(false);
+        instructionsPanel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(instructionsPanelFirstButton);
     }
 
     public void OptionsButtonClicked()
     {
+        // Bu fonksiyonun hangi panelden çağrıldığına göre mantık değişebilir,
+        // şimdilik ana menüden geldiğini varsayıyoruz.
         mainMenuPanel.SetActive(false);
         optionsPanel.SetActive(true);
-        
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(optionsPanelFirstButton);
     }
@@ -67,24 +62,39 @@ public class UIManager : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         creditsPanel.SetActive(true);
-        
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(creditsPanelFirstButton);
     }
     
+    // YENİ FONKSİYON: Talimatlar panelinden Player Select'e geri dönmek için
+    public void BackToPlayerSelect()
+    {
+        instructionsPanel.SetActive(false);
+        playerSelectPanel.SetActive(true);
+        // Geri döndüğümüzde kontrolcünün odağını Talimatlar butonuna geri getir
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(instructionsButtonOnPlayerSelect);
+    }
+
     public void BackToMainMenu(GameObject buttonToSelectOnMain)
     {
         mainMenuPanel.SetActive(true);
         playerSelectPanel.SetActive(false);
         optionsPanel.SetActive(false);
         creditsPanel.SetActive(false);
+        instructionsPanel.SetActive(false); // Yeni paneli de burada gizlediğimizden emin olalım
         
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(buttonToSelectOnMain);
     }
     
+    public void SelectTwoPlayerMode()
+    {
+        InputManager.ClearAllEventSubscriptions();
+        SceneManager.LoadScene("CharacterSelectScene");
+    } 
     public void QuitGame()
     {
         Application.Quit();
-    }
+    } 
 }

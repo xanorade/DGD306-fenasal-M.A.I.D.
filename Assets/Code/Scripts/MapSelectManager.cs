@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+// SelectableMap class'ı aynı kalıyor.
 [System.Serializable]
 public class SelectableMap
 {
@@ -22,15 +23,38 @@ public class MapSelectManager : MonoBehaviour
     public List<Image> mapIconImages;
     public RectTransform selectionFrame;
     public TMP_Text mapNameText;
+    
+    [Header("Input Settings")]
+    [Tooltip("Yön tuşuna basılı tutulduğunda ne kadar hızlı seçim yapılacağı")]
+    public float navigationCooldown = 0.2f;
 
     private int currentIndex = 0;
-    
-    // Add debouncing for navigation input
-    private float navigationCooldown = 0.2f;
-    private float lastNavigationTime = 0f;
+    private float navTimer = 0f;
+
+    // Bu script aktif olduğunda InputManager olaylarına abone ol
+    private void OnEnable()
+    {
+        // Sadece Player 1'in girdilerini dinliyoruz
+        InputManager.OnPlayer1Move += HandleNavigation;
+        InputManager.OnPlayer1Punch += HandleSelection; // P1'in Punch'ı burada Onaylama tuşu
+    }
+
+    // Bu script deaktif olduğunda abonelikleri iptal et
+    private void OnDisable()
+    {
+        InputManager.OnPlayer1Move -= HandleNavigation;
+        InputManager.OnPlayer1Punch -= HandleSelection;
+    }
 
     IEnumerator Start()
     {
+        if (InputManager.Instance != null)
+        {
+            // P2'nin bu ekranda bir şey yapmasına gerek olmadığı için SplitScreen yerine normal UI modu yeterli olabilir.
+            // Ancak tutarlılık için SplitScreen de kalabilir, bir zararı olmaz.
+            InputManager.Instance.EnableSplitScreenUIControls();
+        }
+
         for (int i = 0; i < mapList.Count; i++)
         {
             if (i < mapIconImages.Count)
@@ -40,86 +64,63 @@ public class MapSelectManager : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
-
-        UpdateSelection(0);
-        
-        // Disable EventSystem UI input module to prevent conflicts
-        var inputModule = FindObjectOfType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-        if (inputModule != null)
-        {
-            inputModule.enabled = false;
-        }
-        
-        // Enable UI controls for menu navigation
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.EnableUIControls();
-        }
-        
-        // Subscribe to input events
-        SubscribeToInputEvents();
+        UpdateSelectionUI(0);
     }
 
-    private void SubscribeToInputEvents()
+    private void Update()
     {
-        InputManager.OnUINavigate += HandleNavigation;
-        InputManager.OnUISubmit += HandleSelection;
-    }
-
-    private void UnsubscribeFromInputEvents()
-    {
-        InputManager.OnUINavigate -= HandleNavigation;
-        InputManager.OnUISubmit -= HandleSelection;
-    }
-
-    private void HandleNavigation(Vector2 navigation)
-    {
-        // Add debouncing to prevent rapid repeated inputs
-        if (Time.time < lastNavigationTime + navigationCooldown)
+        // Sadece navigasyon zamanlayıcısını güncellemek için kullanılıyor
+        if (navTimer > 0)
         {
-            return;
+            navTimer -= Time.deltaTime;
         }
-        
+    }
+    
+    // P1'in hareket girdisini işleyen fonksiyon
+    private void HandleNavigation(Vector2 moveInput)
+    {
+        // Zamanlayıcı dolmadan yeni bir hareket algılama
+        if (navTimer > 0) return;
+
         int prevIndex = currentIndex;
 
-        if (navigation.x < -0.5f) // Left
-        {
-            currentIndex--;
-            lastNavigationTime = Time.time;
-        }
-        else if (navigation.x > 0.5f) // Right
-        {
-            currentIndex++;
-            lastNavigationTime = Time.time;
-        }
-        else
-        {
-            return;
-        }
-        
-        // Handle wrapping
+        // Sadece yatay hareketi dikkate al
+        if (moveInput.x > 0.5f) currentIndex++;
+        else if (moveInput.x < -0.5f) currentIndex--;
+        else return; // Yatay girdi yoksa çık
+
+        // Index'in sınırlar içinde dönmesini sağla (wrapping)
         if (currentIndex < 0) currentIndex = mapList.Count - 1;
-        if (currentIndex >= mapList.Count) currentIndex = 0;
+        if (currentIndex >= mapList.Count) currentIndex = mapList.Count > 0 ? currentIndex % mapList.Count : 0;
         
-        // Update if index changed
         if (prevIndex != currentIndex)
         {
-            UpdateSelection(currentIndex);
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySFX("ButtonSelect");
-            }
+            UpdateSelectionUI(currentIndex);
+            // Zamanlayıcıyı sıfırla ki ardışık hızlı geçişler olmasın
+            navTimer = navigationCooldown;
         }
     }
-
-    void UpdateSelection(int index)
+    
+    // UI elemanlarını güncelleyen ortak fonksiyon
+    private void UpdateSelectionUI(int index)
     {
         currentIndex = index;
         selectionFrame.position = mapIconImages[currentIndex].rectTransform.position;
         mapNameText.text = mapList[currentIndex].mapName;
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("ButtonSelect");
+        }
+    }
+    
+    // P1'in onaylama (Punch) girdisini işleyen fonksiyon
+    private void HandleSelection()
+    {
+        SelectMapAndStartFight();
     }
 
-    private void HandleSelection()
+    void SelectMapAndStartFight()
     {
         if (GameManager.instance == null)
         {
@@ -128,27 +129,15 @@ public class MapSelectManager : MonoBehaviour
         }
 
         GameManager.instance.selectedMapPrefab = mapList[currentIndex].mapPrefab;
-
+        
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PlaySFX("ButtonClick");
         }
 
-        // Clear all input event subscriptions before changing scenes
-        InputManager.ClearAllEventSubscriptions();
+        // Sahne değiştirmeden önce event aboneliklerini temizle
+        if(InputManager.Instance != null) InputManager.ClearAllEventSubscriptions();
 
         SceneManager.LoadScene("FightScene");
-    }
-
-    private void OnDestroy()
-    {
-        UnsubscribeFromInputEvents();
-        
-        // Re-enable EventSystem UI input module when leaving
-        var inputModule = FindObjectOfType<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-        if (inputModule != null)
-        {
-            inputModule.enabled = true;
-        }
     }
 }

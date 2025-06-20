@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+// SelectableCharacter class'ı aynı kalıyor
 [System.Serializable]
 public class SelectableCharacter
 {
@@ -26,204 +27,117 @@ public class CharacterSelectManager : MonoBehaviour
     public RectTransform p2Frame;
     public TMP_Text instructionText;
 
-    [Header("Navigation Settings")]
-
+    [Header("Input Settings")]
+    [Tooltip("Yön tuşuna basılı tutulduğunda ne kadar hızlı seçim yapılacağı")]
+    public float navigationCooldown = 0.25f;
 
     private int p1_currentIndex = 0;
-    private int p2_currentIndex = 1;
-    
-    // Add debouncing for navigation input
-    private float navigationCooldown = 0.2f;
-    private float lastNavigationTime = 0f;
+    private int p2_currentIndex = 1; 
+    private float p1_navTimer = 0f;
+    private float p2_navTimer = 0f;
 
+    // Bu script aktif olduğunda olaylara abone ol
+    private void OnEnable()
+    {
+        InputManager.OnPlayer1Move += HandlePlayer1Navigation;
+        InputManager.OnPlayer1Punch += HandlePlayer1Selection; // Punch = Onaylama olarak kullanıyoruz
+
+        InputManager.OnPlayer2Move += HandlePlayer2Navigation;
+        InputManager.OnPlayer2Punch += HandlePlayer2Selection; // Punch = Onaylama olarak kullanıyoruz
+    }
+
+    // Bu script deaktif olduğunda abonelikleri iptal et
+    private void OnDisable()
+    {
+        InputManager.OnPlayer1Move -= HandlePlayer1Navigation;
+        InputManager.OnPlayer1Punch -= HandlePlayer1Selection;
+        
+        InputManager.OnPlayer2Move -= HandlePlayer2Navigation;
+        InputManager.OnPlayer2Punch -= HandlePlayer2Selection;
+    }
+    
     IEnumerator Start()
     {
-        Debug.Log("CharacterSelectManager: Start called");
-        
+        if (InputManager.Instance != null)
+        {
+            // Artık bu yeni fonksiyonu çağırıyoruz
+            InputManager.Instance.EnableSplitScreenUIControls();
+        }
+        // UI ikonlarını listedeki karakterlere göre doldur
         for (int i = 0; i < characterList.Count; i++)
         {
             if (i < characterIconImages.Count)
-            {
                 characterIconImages[i].sprite = characterList[i].characterIcon;
-            }
         }
 
         yield return new WaitForEndOfFrame();
         
+        // Başlangıç durumu
         currentState = SelectionState.P1_Choosing;
         instructionText.text = "PLAYER 1: CHOOSE YOUR MAID";
         p2Frame.gameObject.SetActive(false);
         UpdateFramePosition(1, p1_currentIndex);
-        
-        // Check if InputManager exists
-        if (InputManager.Instance == null)
-        {
-            Debug.LogError("CharacterSelectManager: InputManager.Instance is null!");
-            // Fall back to old input system for now
-            yield break;
-        }
-        
-        Debug.Log("CharacterSelectManager: InputManager found, enabling UI controls");
-        
-        // Enable UI controls for menu navigation
-        InputManager.Instance.EnableUIControls();
-        
-        // Subscribe to input events
-        SubscribeToInputEvents();
-        
-        Debug.Log("CharacterSelectManager: Setup complete");
     }
-
-    private void SubscribeToInputEvents()
+    
+    // P1 Navigasyon Olayını İşleyen Fonksiyon
+    private void HandlePlayer1Navigation(Vector2 moveInput)
     {
-        Debug.Log("CharacterSelectManager: Subscribing to input events");
+        if (currentState != SelectionState.P1_Choosing) return;
         
-        // Subscribe to UI navigation for both players
-        InputManager.OnUINavigate += HandleNavigation;
-        InputManager.OnUISubmit += HandleSubmit;
-        
-        // Also subscribe to individual player inputs for selection
-        InputManager.OnPlayer1Punch += HandlePlayer1Selection;
-        InputManager.OnPlayer2Punch += HandlePlayer2Selection;
-        
-        Debug.Log("CharacterSelectManager: Input events subscribed");
-    }
-
-    private void UnsubscribeFromInputEvents()
-    {
-        Debug.Log("CharacterSelectManager: Unsubscribing from input events");
-        
-        InputManager.OnUINavigate -= HandleNavigation;
-        InputManager.OnUISubmit -= HandleSubmit;
-        InputManager.OnPlayer1Punch -= HandlePlayer1Selection;
-        InputManager.OnPlayer2Punch -= HandlePlayer2Selection;
-    }
-
-    // Add Update method to handle old input as fallback
-    void Update()
-    {
-        if (currentState == SelectionState.SelectionComplete) return;
-
-        // Fallback to old input system if InputManager is not available
-        if (InputManager.Instance == null)
+        // Zamanlayıcı kullanarak hızlı geçişleri engelle
+        if (p1_navTimer <= 0)
         {
-            HandleOldInputSystem();
-            return;
-        }
-    }
-
-    private void HandleOldInputSystem()
-    {
-        if (currentState == SelectionState.P1_Choosing)
-        {
-            HandleNavigationOld(ref p1_currentIndex, 1);
-            HandleSelectionOld(1);
-        }
-        else
-        {
-            HandleNavigationOld(ref p2_currentIndex, 2);
-            HandleSelectionOld(2);
-        }
-    }
-
-    void HandleNavigationOld(ref int currentIndex, int playerIndex)
-    {
-        KeyCode up = (playerIndex == 1) ? KeyCode.W : KeyCode.UpArrow;
-        KeyCode down = (playerIndex == 1) ? KeyCode.S : KeyCode.DownArrow;
-        KeyCode left = (playerIndex == 1) ? KeyCode.A : KeyCode.LeftArrow;
-        KeyCode right = (playerIndex == 1) ? KeyCode.D : KeyCode.RightArrow;
-        
-        int prevIndex = currentIndex;
-
-        if (Input.GetKeyDown(up)) currentIndex -= 2;
-        if (Input.GetKeyDown(down)) currentIndex += 2;
-        if (Input.GetKeyDown(left)) currentIndex--;
-        if (Input.GetKeyDown(right)) currentIndex++;
-        
-        if (currentIndex < 0) currentIndex = characterList.Count + currentIndex;
-        if (currentIndex >= characterList.Count) currentIndex = currentIndex % characterList.Count;
-
-        if (prevIndex != currentIndex)
-        {
-            UpdateFramePosition(playerIndex, currentIndex);
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySFX("ButtonSelect");
-            }
-        }
-    }
-
-    void HandleSelectionOld(int playerIndex)
-    {
-        KeyCode selectKey = (playerIndex == 1) ? KeyCode.J : KeyCode.Keypad1;
-
-        if (Input.GetKeyDown(selectKey))
-        {
-            SelectCharacter(playerIndex, (playerIndex == 1) ? p1_currentIndex : p2_currentIndex);
-        }
-    }
-
-    private void HandleNavigation(Vector2 navigation)
-    {
-        Debug.Log($"CharacterSelectManager: HandleNavigation called with {navigation}");
-        
-        if (currentState == SelectionState.SelectionComplete) return;
-
-        // Add debouncing to prevent rapid navigation
-        if (Time.time < lastNavigationTime + navigationCooldown) return;
-
-        if (currentState == SelectionState.P1_Choosing)
-        {
-            if (HandlePlayerNavigation(ref p1_currentIndex, navigation))
+            if(UpdateIndexFromInput(ref p1_currentIndex, moveInput))
             {
                 UpdateFramePosition(1, p1_currentIndex);
-                lastNavigationTime = Time.time;
+                p1_navTimer = navigationCooldown;
             }
         }
-        else if (currentState == SelectionState.P2_Choosing)
+    }
+    
+    // P2 Navigasyon Olayını İşleyen Fonksiyon
+    private void HandlePlayer2Navigation(Vector2 moveInput)
+    {
+        if (currentState != SelectionState.P2_Choosing) return;
+
+        if (p2_navTimer <= 0)
         {
-            if (HandlePlayerNavigation(ref p2_currentIndex, navigation))
+            if(UpdateIndexFromInput(ref p2_currentIndex, moveInput))
             {
                 UpdateFramePosition(2, p2_currentIndex);
-                lastNavigationTime = Time.time;
+                p2_navTimer = navigationCooldown;
             }
         }
     }
 
-    private bool HandlePlayerNavigation(ref int currentIndex, Vector2 navigation)
+    // Update fonksiyonu sadece zamanlayıcıları güncellemek için var
+    private void Update()
+    {
+        if (p1_navTimer > 0) p1_navTimer -= Time.deltaTime;
+        if (p2_navTimer > 0) p2_navTimer -= Time.deltaTime;
+    }
+
+    // Ortak index güncelleme mantığı
+    private bool UpdateIndexFromInput(ref int currentIndex, Vector2 moveInput)
     {
         int prevIndex = currentIndex;
         
-        // Use higher threshold to avoid accidental diagonal movement
-        float threshold = 0.7f;
+        if (moveInput.x > 0.5f) currentIndex++;
+        else if (moveInput.x < -0.5f) currentIndex--;
+        else if (moveInput.y > 0.5f) currentIndex -= 2; // 2x2 grid için
+        else if (moveInput.y < -0.5f) currentIndex += 2; // 2x2 grid için
+        else return false; // Girdi yoksa çık
 
-        // For 4 columns, 1 row - only handle left/right navigation
-        if (navigation.x < -threshold) // Left
+        // Index'in sınırlar içinde kalmasını sağla (wrapping)
+        if (currentIndex < 0) currentIndex = characterList.Count - 1;
+        if (currentIndex >= characterList.Count) currentIndex = 0;
+        
+        if (prevIndex != currentIndex && AudioManager.instance != null)
         {
-            currentIndex--;
-            if (currentIndex < 0) currentIndex = characterList.Count - 1; // Wrap to end
-        }
-        else if (navigation.x > threshold) // Right
-        {
-            currentIndex++;
-            if (currentIndex >= characterList.Count) currentIndex = 0; // Wrap to beginning
-        }
-        else
-        {
-            return false; // No significant navigation input
-        }
-
-        if (prevIndex != currentIndex)
-        {
-            Debug.Log($"CharacterSelectManager: Index changed from {prevIndex} to {currentIndex}");
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySFX("ButtonSelect");
-            }
-            return true;
+            AudioManager.instance.PlaySFX("ButtonSelect");
         }
         
-        return false;
+        return prevIndex != currentIndex;
     }
 
     private void UpdateFramePosition(int playerIndex, int characterIndex)
@@ -232,24 +146,8 @@ public class CharacterSelectManager : MonoBehaviour
         targetFrame.position = characterIconImages[characterIndex].rectTransform.position;
     }
 
-    private void HandleSubmit()
-    {
-        Debug.Log("CharacterSelectManager: HandleSubmit called");
-        
-        if (currentState == SelectionState.P1_Choosing)
-        {
-            SelectCharacter(1, p1_currentIndex);
-        }
-        else if (currentState == SelectionState.P2_Choosing)
-        {
-            SelectCharacter(2, p2_currentIndex);
-        }
-    }
-
     private void HandlePlayer1Selection()
     {
-        Debug.Log("CharacterSelectManager: HandlePlayer1Selection called");
-        
         if (currentState == SelectionState.P1_Choosing)
         {
             SelectCharacter(1, p1_currentIndex);
@@ -258,8 +156,6 @@ public class CharacterSelectManager : MonoBehaviour
 
     private void HandlePlayer2Selection()
     {
-        Debug.Log("CharacterSelectManager: HandlePlayer2Selection called");
-        
         if (currentState == SelectionState.P2_Choosing)
         {
             SelectCharacter(2, p2_currentIndex);
@@ -268,8 +164,7 @@ public class CharacterSelectManager : MonoBehaviour
 
     void SelectCharacter(int playerIndex, int characterIndex)
     {
-        Debug.Log($"CharacterSelectManager: SelectCharacter called - Player {playerIndex}, Character {characterIndex}");
-        
+        // ... (Bu fonksiyonun içeriği aynı kalıyor)
         if (GameManager.instance == null)
         {
             Debug.LogError("GameManager not found!");
@@ -279,41 +174,26 @@ public class CharacterSelectManager : MonoBehaviour
         if (playerIndex == 1)
         {
             GameManager.instance.player1Prefab = characterList[characterIndex].characterPrefab;
-            Debug.Log("Player 1 selected: " + characterList[characterIndex].characterPrefab.name);
-
             currentState = SelectionState.P2_Choosing;
             instructionText.text = "PLAYER 2: CHOOSE YOUR MAID";
             p2Frame.gameObject.SetActive(true);
             UpdateFramePosition(2, p2_currentIndex);
         }
-        else // Player 2
+        else
         {
             GameManager.instance.player2Prefab = characterList[characterIndex].characterPrefab;
-            Debug.Log("Player 2 selected: " + characterList[characterIndex].characterPrefab.name);
-
             currentState = SelectionState.SelectionComplete;
             instructionText.text = "GET READY TO FIGHT!";
             StartCoroutine(StartFightCoroutine());
         }
         
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySFX("ButtonClick");
-        }
+        if (AudioManager.instance != null) AudioManager.instance.PlaySFX("ButtonClick");
     }
 
     private IEnumerator StartFightCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        
-        // Clear all input event subscriptions before changing scenes
-        InputManager.ClearAllEventSubscriptions();
-        
-        SceneManager.LoadScene("MapSelectScene"); 
-    }
-
-    private void OnDestroy()
-    {
-        UnsubscribeFromInputEvents();
+        if(InputManager.Instance != null) InputManager.ClearAllEventSubscriptions();
+        SceneManager.LoadScene("MapSelectScene");
     }
 }

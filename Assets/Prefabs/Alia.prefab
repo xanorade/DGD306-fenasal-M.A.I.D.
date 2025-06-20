@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 24
-  jumpForce: 48
+  jumpForce: 36
   dashSpeed: 24
   dashDuration: 0.1
   dashCooldown: 0.5
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3e353fb3df094f949f58202ac79f19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerIndex: 1
+  playerIndex: 0
   fighter: {fileID: 8374773871178768354}
   doubleTapTimeThreshold: 0.2
 --- !u!114 &2029079354159917077
