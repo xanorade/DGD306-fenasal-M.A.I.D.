@@ -27,7 +27,7 @@ public class CharacterSelectManager : MonoBehaviour
     public TMP_Text instructionText;
 
     [Header("Navigation Settings")]
-    [SerializeField] private int gridColumns = 4;
+
 
     private int p1_currentIndex = 0;
     private int p2_currentIndex = 1;
